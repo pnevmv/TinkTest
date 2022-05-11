@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class Test228 {
-    static final Logger log = LoggerFactory.getLogger(Test228.class);
+
     public static void main(String[] args) {
+
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
         var api = InvestApi.create(token);
 
@@ -28,7 +29,7 @@ public class Test228 {
         try {
             String tatneftFigi = "BBG004S68829";
             var tatneft = instr.getShareByFigi(tatneftFigi).get();
-            LocalDateTime start = LocalDateTime.now().minusDays(5);
+            LocalDateTime start = LocalDateTime.now().minusDays(9);
             LocalDateTime end = LocalDateTime.now();
 
             var candles= serv.getCandles("BBG004S68829", start.toInstant(ZoneOffset.ofHours(3)), end.toInstant(ZoneOffset.ofHours(3)), CandleInterval.CANDLE_INTERVAL_HOUR).get();
