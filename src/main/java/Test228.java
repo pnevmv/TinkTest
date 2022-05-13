@@ -1,50 +1,82 @@
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class Test228 {
 
     public static void main(String[] args) {
+        //не песок
+        //var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
+        //var api = InvestApi.create(token);
 
-        var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
-        var api = InvestApi.create(token);
-        CandleHandler c = new CandleHandler(api);
-        marketdataStreamExample(api);
-        //c.getStream();
-        //instrumentsServiceExample(api);
-        //accInfo(api);
-        //candles(api);
+        //песок
+        var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
+        var sandboxApi = InvestApi.createSandbox(sandboxToken);
+        //Sandbox sandbox = new Sandbox(sandboxApi);
+        //var accountId = sandbox.openAccount();
+
+        String rubISO = "4217";
+        int moneyAmount = 1500;
+        //sandbox.payIn(accountId, rubISO, moneyAmount);
+        //sandbox.getAccountMoney(accountId);
+
     }
 
     private static void marketdataStreamExample(InvestApi api) {
-        var figi = "BBG004730RP0";
+        var figi = List.of("BBG004730RP0");
 
         //Описываем, что делать с приходящими в стриме данными
         StreamProcessor<MarketDataResponse> processor = response -> {
+            System.out.println("oao " + response.getCandle().getOpen());
             if (response.hasTradingStatus()) {
-                System.out.println("Новые данные по статусам: {}" +  response.getTradingStatus().toString());
+                System.out.println("Заебись8");
             } else if (response.hasPing()) {
-                System.out.println("пинг сообщение");
+                System.out.println("Заебись7");
             } else if (response.hasCandle()) {
-                System.out.println("Новые данные по свечам: {}"+ response);
+                System.out.println("Заебись6");
+            } else if (response.hasOrderbook()) {
+                System.out.println("Заебись5");
+            } else if (response.hasTrade()) {
+                System.out.println("Заебись4");
+            } else if (response.hasSubscribeCandlesResponse()) {
+                var successCount = response.getSubscribeCandlesResponse().getCandlesSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                System.out.println("Заебись3 " + successCount);
+            } else if (response.hasSubscribeInfoResponse()) {
+                var successCount = response.getSubscribeInfoResponse().getInfoSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                System.out.println("Заебись2");
+            } else if (response.hasSubscribeOrderBookResponse()) {
+                var successCount = response.getSubscribeOrderBookResponse().getOrderBookSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                System.out.println("Заебись1");
+                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
             }
         };
-
         Consumer<Throwable> onErrorCallback = error -> System.out.println(error.toString());
 
+        api.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(figi);
 
-        api.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(List.of(randomFigi));
+        long time = System.currentTimeMillis();
+        while (System.currentTimeMillis() - time < 1000 * 10)
+
+        api.getMarketDataStreamService().getStreamById("candles_stream").unsubscribeCandles(figi);
+    }
+
+    private static List<String> randomFigi(InvestApi api, int count) {
+        return api.getInstrumentsService().getTradableSharesSync()
+                .stream()
+                .filter(el -> Boolean.TRUE.equals(el.getApiTradeAvailableFlag()))
+                .map(Share::getFigi)
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
     private  static void candles(InvestApi api){
