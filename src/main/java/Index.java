@@ -5,15 +5,14 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.util.List;
 
 public class Index {
-    String name;
+    IndexType indexType;
     double value;
     CandleInterval candleInterval;
     Timestamp fromDate;
     List<Candle> candleHistory;
 
-
-    public Index(String name, double value, CandleInterval candleInterval, Timestamp fromDate) {
-        this.name = name;
+    public Index(IndexType indexType, double value, CandleInterval candleInterval, Timestamp fromDate) {
+        this.indexType = indexType;
         this.value = value;
         this.candleInterval = candleInterval;
         this.fromDate = fromDate;
@@ -21,5 +20,9 @@ public class Index {
 
     public void getHistory(String figi, CandleSource candleSource) {
         this.candleHistory = candleSource.uploadCandles(figi, candleInterval, fromDate);
+    }
+
+    public void setValue(double value) {
+        this.value = value;
     }
 }

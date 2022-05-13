@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class CandleHandler {
-    private InvestApi api;
+    private final InvestApi api;
 
     public CandleHandler(InvestApi api) {
         this.api = api;
