@@ -2,6 +2,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
+import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 public class Test228 {
 
@@ -17,11 +19,34 @@ public class Test228 {
 
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
         var api = InvestApi.create(token);
-
+        CandleHandler c = new CandleHandler(api);
+        marketdataStreamExample(api);
+        //c.getStream();
         //instrumentsServiceExample(api);
         //accInfo(api);
-        candles(api);
+        //candles(api);
     }
+
+    private static void marketdataStreamExample(InvestApi api) {
+        var figi = "BBG004730RP0";
+
+        //Описываем, что делать с приходящими в стриме данными
+        StreamProcessor<MarketDataResponse> processor = response -> {
+            if (response.hasTradingStatus()) {
+                System.out.println("Новые данные по статусам: {}" +  response.getTradingStatus().toString());
+            } else if (response.hasPing()) {
+                System.out.println("пинг сообщение");
+            } else if (response.hasCandle()) {
+                System.out.println("Новые данные по свечам: {}"+ response);
+            }
+        };
+
+        Consumer<Throwable> onErrorCallback = error -> System.out.println(error.toString());
+
+
+        api.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(List.of(randomFigi));
+    }
+
     private  static void candles(InvestApi api){
         var instr = api.getInstrumentsService();
         var serv = api.getMarketDataService();
