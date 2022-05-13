@@ -100,20 +100,4 @@ public class Test228 {
             e.printStackTrace();
         }
     }
-
-    private  static void accInfo(InvestApi api){
-
-        try {
-            var acc = api.getUserService().getAccounts().get().get(0);
-            var accServ = api.getOperationsService();
-
-            var dhdhdh = accServ.getPortfolio(acc.getId());
-            var m = dhdhdh.get();
-            System.out.println(m.getTotalAmountEtfs().getValue());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-    }
 }
