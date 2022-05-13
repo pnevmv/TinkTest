@@ -9,7 +9,7 @@ public class Company {
     long moneyToTrade;
     long freeMoney;
     int lossPercent;
-    HashMap<String, Index> companyIndexes;
+    HashMap<IndexType, Index> companyIndexes;
 
     public Company(String figi, long moneyToTrade, int lossPercent) {
         this.figi = figi;
@@ -22,6 +22,10 @@ public class Company {
         for (Index index: companyIndexes.values()) {
             index.getHistory(figi, candleSource);
         }
+    }
+
+    public void setIndexValue(IndexType indexType, double value) {
+        companyIndexes.get(indexType).setValue(value);
     }
 
 }
