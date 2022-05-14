@@ -1,7 +1,6 @@
 import ru.tinkoff.piapi.contract.v1.Candle;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class Company {
     String name;
@@ -9,6 +8,8 @@ public class Company {
     long moneyToTrade;
     long freeMoney;
     int lossPercent;
+    boolean isTrading;
+    int shareNum;
     HashMap<IndexType, Index> companyIndexes;
 
     public Company(String figi, long moneyToTrade, int lossPercent) {
@@ -28,4 +29,23 @@ public class Company {
         companyIndexes.get(indexType).setValue(value);
     }
 
+    public void tradeOn() {
+        this.isTrading = true;
+    }
+
+    public void tradeOff() {
+        this.isTrading = false;
+    }
+
+    public boolean getIsTrading() {
+        return this.isTrading;
+    }
+
+    public void setShareNum(int number) {
+        this.shareNum = number;
+    }
+
+    public int getShareNum() {
+        return this.shareNum;
+    }
 }
