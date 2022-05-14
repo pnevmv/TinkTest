@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 
 public class CompaniesForTrading {
     HashMap<String, Company> companies;
@@ -10,5 +11,21 @@ public class CompaniesForTrading {
 
     public HashMap<String, Company> getCompanies() {
         return this.companies;
+    }
+
+    public List<String> getFigis() {
+        List<String> figis = List.of();
+        for (Company company :companies.values()) {
+            figis.add(company.figi);
+        }
+        return figis;
+    }
+
+    public List<String> getFigisOfTradingCompanies() {
+        List<String> figis = List.of();
+        for (Company company :companies.values()) {
+            if (company.isTrading) figis.add(company.figi);
+        }
+        return figis;
     }
 }

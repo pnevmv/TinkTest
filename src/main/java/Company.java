@@ -1,5 +1,3 @@
-import ru.tinkoff.piapi.contract.v1.Candle;
-
 import java.util.HashMap;
 
 public class Company {
