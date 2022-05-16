@@ -1,6 +1,9 @@
 package Data;
 
 import Connection.*;
+import com.google.protobuf.Timestamp;
+import ru.tinkoff.piapi.contract.v1.CandleInterval;
+
 import java.util.HashMap;
 
 public class Company {
@@ -16,18 +19,25 @@ public class Company {
     private HashMap<IndexType, Index> companyIndexes;
     private OpenDeals openDeals;
 
-    public Company(String figi, long moneyToTrade, double lossPercent, double takeProfit, int lot,  HashMap<IndexType, Index> companyIndexes) {
+    public Company(String figi, double moneyToTrade, double lossPercent, double takeProfit, int lot) {
         this.figi = figi;
         this.moneyToTrade = moneyToTrade;
         this.freeMoney = moneyToTrade;
         this.lossPercent = lossPercent;
         this.takeProfit = takeProfit;
         this.lot = lot;
-        this.companyIndexes = companyIndexes;
+        this.companyIndexes = initializeIndexes();
         this.shareNumber = 0;
         this.isTrading = false;
     }
 
+    private HashMap<IndexType, Index> initializeIndexes(){
+        HashMap<IndexType, Index> companyIndex = new  HashMap<>();
+        companyIndex.put(IndexType.RSI, new Index(IndexType.RSI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, Timestamp.newBuilder().setSeconds(228).build()));
+        companyIndex.put(IndexType.NVI, new Index(IndexType.PVI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, Timestamp.newBuilder().setSeconds(228).build()));
+        companyIndex.put(IndexType.PVI, new Index(IndexType.NVI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, Timestamp.newBuilder().setSeconds(228).build()));
+        return companyIndex;
+    }
     public Company(String figi, double moneyToTrade, double freeMoney, double lossPercent, double takeProfit, boolean isTrading, int shareNumber, int lot, HashMap<IndexType, Index> companyIndexes, OpenDeals openDeals) {
         this.figi = figi;
         this.moneyToTrade = moneyToTrade;
@@ -105,6 +115,7 @@ public class Company {
         getOpenDeals().deletePartly(deal, lotNumber);
         this.freeMoney += price;
     }
+
 
     public OpenDeals getOpenDeals() {
         return this.openDeals;

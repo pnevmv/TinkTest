@@ -1,3 +1,4 @@
+import Data.Company;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
@@ -18,9 +19,9 @@ public class Main {
         //var api = InvestApi.create(token);
 
         //песок
-        var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
-        var sandboxApi = InvestApi.createSandbox(sandboxToken);
-        marketdataStreamExample(sandboxApi);
+        //var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
+        //var sandboxApi = InvestApi.createSandbox(sandboxToken);
+        //marketdataStreamExample(sandboxApi);
         //Sandbox sandbox = new Sandbox(sandboxApi);
         //var accountId = sandbox.openAccount();
 
