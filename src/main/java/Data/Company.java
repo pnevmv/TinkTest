@@ -52,4 +52,18 @@ public class Company {
     public int getShareNum() {
         return this.shareNum;
     }
+
+    public void buyShares(int lotNumber, double price) {
+        double stopPrice = 0; //TODO: calculating StopPrice
+        getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice));
+    }
+
+    public void sellShares (Deal deal, int lotNumber, double price) {
+        getOpenDeals().deletePartly(deal, lotNumber);
+        this.freeMoney += price;
+    }
+
+    public OpenDeals getOpenDeals() {
+        return this.openDeals;
+    }
 }
