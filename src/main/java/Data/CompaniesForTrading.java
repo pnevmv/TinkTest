@@ -1,3 +1,5 @@
+package Data;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class CompaniesForTrading {
 
     public List<String> getFigisOfTradingCompanies() {
         List<String> figis = List.of();
-        for (Company company :companies.values()) {
+        for (Company company : companies.values()) {
             if (company.isTrading) figis.add(company.figi);
         }
         return figis;

@@ -1,3 +1,6 @@
+package Data;
+
+import Connection.*;
 import java.util.HashMap;
 
 public class Company {
@@ -5,16 +8,19 @@ public class Company {
     String figi;
     long moneyToTrade;
     long freeMoney;
-    int lossPercent;
+    double lossPercent;
+    double takeProfit;
     boolean isTrading;
     int shareNum;
     HashMap<IndexType, Index> companyIndexes;
+    OpenDeals openDeals;
 
-    public Company(String figi, long moneyToTrade, int lossPercent) {
+    public Company(String figi, long moneyToTrade, double lossPercent, double takeProfit) {
         this.figi = figi;
         this.moneyToTrade = moneyToTrade;
         this.freeMoney = moneyToTrade;
         this.lossPercent = lossPercent;
+        this.takeProfit = takeProfit;
     }
 
     public void startTrade(CandleSource candleSource) {
