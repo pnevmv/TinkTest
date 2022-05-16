@@ -16,13 +16,14 @@ public class Company {
     private HashMap<IndexType, Index> companyIndexes;
     private OpenDeals openDeals;
 
-    public Company(String figi, long moneyToTrade, double lossPercent, double takeProfit, int lot) {
+    public Company(String figi, long moneyToTrade, double lossPercent, double takeProfit, int lot,  HashMap<IndexType, Index> companyIndexes) {
         this.figi = figi;
         this.moneyToTrade = moneyToTrade;
         this.freeMoney = moneyToTrade;
         this.lossPercent = lossPercent;
         this.takeProfit = takeProfit;
         this.lot = lot;
+        this.companyIndexes = companyIndexes;
         this.shareNumber = 0;
         this.isTrading = false;
     }
