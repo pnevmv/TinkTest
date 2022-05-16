@@ -3,10 +3,10 @@ package Data;
 import java.util.Date;
 
 public class Deal {
-    private int shareNumber;
-    private double price;
-    private Date date;
-    private double stopPrice;
+    private final int shareNumber;
+    private final double price;
+    private final Date date;
+    private final double stopPrice;
 
     public Deal(int shareNumber, double price, double stopPrice) {
         this.shareNumber = shareNumber;
@@ -25,5 +25,17 @@ public class Deal {
 
     public double getStopPrice() {
         return this.stopPrice;
+    }
+
+    public Date getDate() {
+        return this.date;
+    }
+
+    @Override
+    public String toString() {
+        return "Сделка стоимостью: " + this.getPrice()
+                + "\nЦена экстренной продажи:" + this.getStopPrice()
+                + "\nКол-во приобретенных акций:" + this.getShareNumber()
+                + "\nДата сделки: " + this.getDate();
     }
 }
