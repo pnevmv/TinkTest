@@ -1,7 +1,6 @@
 package Data;
 
-import Data.Deal;
-
+import java.util.Comparator;
 import java.util.List;
 
 public class OpenDeals {
@@ -15,7 +14,7 @@ public class OpenDeals {
         openDeals.add(deal);
     }
 
-    public void deleteDeal(Deal deal) {
+    private void deleteDeal(Deal deal) {
         openDeals.remove(deal);
     }
 
@@ -26,5 +25,9 @@ public class OpenDeals {
 
     public List<Deal> getOpenDeals() {
         return this.openDeals;
+    }
+
+    public void sortByPrices() {
+        this.openDeals.sort(Comparator.comparing(Deal::getPrice));
     }
 }
