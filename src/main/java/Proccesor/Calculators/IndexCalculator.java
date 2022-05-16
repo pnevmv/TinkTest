@@ -1,4 +1,4 @@
-package Proccesor;
+package Proccesor.Calculators;
 
 import Data.Company;
 import ru.tinkoff.piapi.contract.v1.Candle;
