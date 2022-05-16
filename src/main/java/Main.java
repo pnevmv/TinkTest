@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class Test228 {
+public class Main {
 
     public static void main(String[] args) {
         //не песок
@@ -18,13 +18,13 @@ public class Test228 {
         //var api = InvestApi.create(token);
 
         //песок
-        var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
-        var sandboxApi = InvestApi.createSandbox(sandboxToken);
+        //var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
+        //var sandboxApi = InvestApi.createSandbox(sandboxToken);
         //Sandbox sandbox = new Sandbox(sandboxApi);
         //var accountId = sandbox.openAccount();
 
-        String rubISO = "4217";
-        int moneyAmount = 1500;
+        //String rubISO = "4217";
+        //int moneyAmount = 1500;
         //sandbox.payIn(accountId, rubISO, moneyAmount);
         //sandbox.getAccountMoney(accountId);
 
