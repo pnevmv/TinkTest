@@ -26,7 +26,7 @@ public class AddCompany implements Command{
         //получить лотность
 
         int lot = 0;
-        double money = Double.parseDouble(args.get(1));
+        double money = Double.parseDouble(args.get(1));  //верификация, чтобы свободных денег было на покупку хотя бы одного лота по текущей рыночной цене
         double loss = Double.parseDouble(args.get(2));
         double takeProfit = Double.parseDouble(args.get(3));
 

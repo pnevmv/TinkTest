@@ -18,7 +18,9 @@ public class ConsoleCommandArgSource implements CommandArgsSource {
     public ConsoleCommandArgSource(Scanner in){
         this.in = in;
         commandArgsMap.put(Commands.CommandType.ADD, this::AddArgs);
-
+        commandArgsMap.put(Commands.CommandType.DELETE, this::DeleteArgs);
+        commandArgsMap.put(Commands.CommandType.START, this::StartArgs);
+        commandArgsMap.put(Commands.CommandType.STOP, this::StopArgs);
     }
 
     @Override
@@ -41,4 +43,33 @@ public class ConsoleCommandArgSource implements CommandArgsSource {
 
         return res;
     }
+
+    private List<String> DeleteArgs(){
+        List<String> res = new ArrayList<>();
+
+        System.out.println("Input figi of company you want to delete. All trading with this company will stop");
+        res.add(in.nextLine().trim());
+
+        return res;
+    }
+
+    private List<String> StartArgs(){
+        List<String> res = new ArrayList<>();
+
+        System.out.println("Input figi of company you want starts to trade");
+        res.add(in.nextLine().trim());
+
+        return res;
+    }
+
+    private List<String> StopArgs(){
+        List<String> res = new ArrayList<>();
+
+        System.out.println("Input figi of company you want bot starts to trade");
+        res.add(in.nextLine().trim());
+
+        return res;
+    }
+
+
 }

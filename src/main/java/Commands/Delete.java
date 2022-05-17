@@ -1,14 +1,17 @@
 package Commands;
 
+import Connection.CandleStream;
 import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
 public class Delete implements Command{
     CompanyCollection companies;
+    CandleStream stream;
 
     public Delete(CompanyCollection companies){
         this.companies = companies;
+        this.stream = stream;
     }
 
     @Override
@@ -18,5 +21,6 @@ public class Delete implements Command{
 
         String figi = args.get(0);
         if(companies.isContainsFigi(figi)) companies.removeByFigi(figi);
+        stream.updateSubscription();
     }
 }
