@@ -7,6 +7,7 @@ public class RSICalculator implements IndexCalculator {
 
     @Override
     public double calculateIndex(Company company, Candle candle) {
+
         return 0;
     }
 }

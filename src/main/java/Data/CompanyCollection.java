@@ -62,9 +62,17 @@ public class CompanyCollection {
         return count;
     }
 
+    public boolean isContainsFigi(String figi){
+        return companies.containsKey(figi);
+    }
+
     @Override
     public String toString() {
         return "Кол-во выбранных компаний: " + getNumberOfCompanies()
                 + "Кол-во трейдящих компаний: " + getNumberOfTradingCompanies();
+    }
+
+    public void removeByFigi(String figi){
+        companies.remove(figi);
     }
 }
