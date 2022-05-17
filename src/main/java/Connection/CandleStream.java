@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 
 public class CandleStream implements CandleSource{
-    private CompaniesForTrading companies;
+    private CompanyCollection companies;
     private MarketDataStreamService marketStreamServ;
     private MarketDataService marketServ;
     private MarketDataSubscriptionService stream;
@@ -25,7 +25,7 @@ public class CandleStream implements CandleSource{
     private int connectionAttempts;
 
     { connectionAttempts = 0; }
-    public CandleStream(InvestApi api, CompaniesForTrading companies){
+    public CandleStream(InvestApi api, CompanyCollection companies){
         marketStreamServ = api.getMarketDataStreamService();
         this.companies = companies;
     }

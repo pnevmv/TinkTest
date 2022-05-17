@@ -2,22 +2,20 @@ package Proccesor;
 
 import Connection.CandleStream;
 import Connection.TradeStream;
-import Data.CompaniesForTrading;
-import Data.Company;
-import Data.CompanyNotFoundException;
+import Data.*;
 import Data.IndexType;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 
 public class StreamProcessor {
-    CompaniesForTrading companies;
+    CompanyCollection companies;
     CandleStream candleStream;
     TradeStream tradeStream;
 
     Candle curCandle;
     Company curCandleCompany;
 
-    public StreamProcessor(CompaniesForTrading companies, CandleStream candleStream, TradeStream tradeStream){
+    public StreamProcessor(CompanyCollection companies, CandleStream candleStream, TradeStream tradeStream){
         this.companies = companies;
         this.tradeStream = tradeStream;
         this.candleStream = candleStream;

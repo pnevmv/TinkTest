@@ -3,10 +3,10 @@ package Data;
 import java.util.HashMap;
 import java.util.List;
 
-public class CompaniesForTrading {
+public class CompanyCollection {
     private HashMap<String, Company> companies;
 
-    public CompaniesForTrading() {
+    public CompanyCollection() {
         this.companies = new HashMap<>();
     }
 
