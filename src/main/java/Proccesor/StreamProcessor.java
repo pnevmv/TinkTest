@@ -1,10 +1,9 @@
 package Proccesor;
 
 import Connection.CandleStream;
-import Connection.TradeStream;
 import Data.Company;
 import Data.CompanyCollection;
-import Data.CompanyNotFoundException;
+import Exceptions.CompanyNotFoundException;
 import Data.IndexType;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;

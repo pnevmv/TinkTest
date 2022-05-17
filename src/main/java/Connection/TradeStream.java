@@ -1,7 +1,8 @@
 package Connection;
 
 import Data.CompanyCollection;
-import Data.CompanyNotFoundException;
+import Exceptions.CompanyNotFoundException;
+import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.OrdersStreamService;

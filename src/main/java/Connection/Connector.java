@@ -1,7 +1,8 @@
 package Connection;
 
 import Data.CompanyCollection;
-import Data.CompanyNotFoundException;
+import Exceptions.CompanyNotFoundException;
+import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
 import ru.tinkoff.piapi.core.InvestApi;
 
@@ -30,6 +31,11 @@ public class Connector {
         candleStream.initialize(streamProcessor);
     }
 
+    public boolean isWorking(InvestApi api) {
+        //TradingSchedule = api.getInstrumentsService().
+        return true;
+    }
+
 
 }
 
@@ -37,7 +43,6 @@ public class Connector {
 -проверка работоспособности биржи
 -верификации компании по фиги
 -получение портфолио
--поля: tradeStream, candleStream
 -инициализация стримов свеч и торговли
 -обработка исключений
 */

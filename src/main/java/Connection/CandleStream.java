@@ -1,8 +1,9 @@
 package Connection;
 import Data.*;
+import Exceptions.CompanyNotFoundException;
+import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
 import com.google.protobuf.Timestamp;
-import com.google.type.DateTime;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.core.InvestApi;
@@ -30,7 +31,7 @@ public class CandleStream implements CandleSource{
         this.companies = companies;
     }
 
-    public void initialize(StreamProcessor processor) throws OutNumberOfReconnectAttemptsException,  CompanyNotFoundException {
+    public void initialize(StreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
         Consumer<Throwable> streamError = e -> {System.out.println(e.toString()); }; //todo: logger, correct reconnection
         stream = marketStreamServ.newStream("Candles", processor::process, streamError);
         stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
