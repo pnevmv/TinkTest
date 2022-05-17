@@ -1,9 +1,12 @@
+import Connection.Connector;
+import Data.CompanyCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -19,21 +22,16 @@ public class Main {
     public static void main(String[] args) {
 
         //не песок
-        //var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
-        //var api = InvestApi.create(token);
+        var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
+        var api = InvestApi.create(token);
+        CompanyCollection companies = new CompanyCollection();
+        Connector connector = new Connector(api, companies);
+        connector.isAvailableNow(api);
 
         //песок
-        var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
-        var sandboxApi = InvestApi.createSandbox(sandboxToken);
-        marketdataStreamExample(sandboxApi);
-        log.info("пинг");
-        //Sandbox sandbox = new Sandbox(sandboxApi);
-        //var accountId = sandbox.openAccount();
-
-        //String rubISO = "4217";
-        //int moneyAmount = 1500;
-        //sandbox.payIn(accountId, rubISO, moneyAmount);
-        //sandbox.getAccountMoney(accountId);
+        //var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
+        //var sandboxApi = InvestApi.createSandbox(sandboxToken);
+        //marketdataStreamExample(sandboxApi);
 
     }
 

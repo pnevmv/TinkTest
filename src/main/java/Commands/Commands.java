@@ -10,10 +10,4 @@ public class Commands {
 
     }
 
-    public enum CommandType {
-        ADD,
-        START,
-        DELETE,
-        STOP
-    }
 }
