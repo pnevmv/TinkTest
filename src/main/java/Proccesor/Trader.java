@@ -1,7 +1,14 @@
 package Proccesor;
 
 import Connection.TradeStream;
+import Data.Company;
 import Data.CompanyCollection;
+import ru.tinkoff.piapi.contract.v1.Candle;
+
+/**
+ *
+ */
+
 
 public class Trader {
     private TradeStream tradeStream;
@@ -12,6 +19,9 @@ public class Trader {
         this.companies = companies;
     }
 
-   // public Calculate
+    public void trade(Company company, Candle candle, double propability){}
 
+   public int calculateLotsToTrade(double probability, Candle candle){
+        return 0;
+   }
 }

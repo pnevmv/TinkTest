@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+
+//todo: make all collections getters immutable
 public class Main {
 
     public static void main(String[] args) {
