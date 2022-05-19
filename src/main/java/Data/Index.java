@@ -1,7 +1,6 @@
 package Data;
 
 import Connection.*;
-import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;

@@ -8,6 +8,7 @@ import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,24 +35,24 @@ public class RSICalculator implements IndexCalculator {
 
         for(int i = 1; i < historyInNum.size(); i++) {
             if (historyInNum.get(i).compareTo(historyInNum.get(i - 1)) > 0) // pos += close(i) - close(i - 1)
-                positive.add(
+                positive = positive.add(
                         historyInNum.get(i)
                             .subtract(historyInNum.get(i - 1))
                 );
             if (historyInNum.get(i).compareTo(historyInNum.get(i - 1)) < 0) // neg += close(i - 1) - close(i)
-                negative.add(
+                negative = negative.add(
                         historyInNum.get(i - 1)
                             .subtract(historyInNum.get(i))
                 );
         }
 
         if(curCandleCLose.compareTo(historyInNum.get(historyInNum.size() - 1)) > 0) //pos += candle.close - close(last)
-            positive.add(
+            positive = positive.add(
                     curCandleCLose
                             .subtract(historyInNum.get(historyInNum.size() - 1)));
 
         if(curCandleCLose.compareTo(historyInNum.get(historyInNum.size() - 1)) < 0) //neg += close(last) - candle.close
-            negative.add(
+            negative = negative.add(
                     historyInNum.get(historyInNum.size() - 1)
                             .subtract(curCandleCLose)
             );
@@ -66,8 +67,8 @@ public class RSICalculator implements IndexCalculator {
         return BigDecimal.valueOf(100).subtract(
                 BigDecimal.valueOf(100).divide(
                         BigDecimal.ONE.add(
-                                pos.divide(neg)  // (pos/size) / (neg/size) = pos/neg
-                        )
+                                pos.divide(neg, 9, RoundingMode.HALF_DOWN)  // (pos/size) / (neg/size) = pos/neg
+                        ), 9, RoundingMode.HALF_DOWN
                 )
         );
     }

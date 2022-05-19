@@ -9,7 +9,7 @@ public class Delete implements Command {
     CompanyCollection companies;
     CandleStream stream;
 
-    public Delete(CompanyCollection companies){
+    public Delete(CompanyCollection companies, CandleStream stream){
         this.companies = companies;
         this.stream = stream;
     }

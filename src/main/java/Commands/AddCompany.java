@@ -2,7 +2,6 @@ package Commands;
 
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
-import Exceptions.NoSuchCommandException;
 
 public class AddCompany implements Command{
     /**
