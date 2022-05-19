@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 
-public class CandleStream implements CandleSource{
+public class CandleStream {
     private CompanyCollection companies;
     private MarketDataStreamService marketStreamServ;
     private MarketDataService marketServ;
@@ -48,9 +48,5 @@ public class CandleStream implements CandleSource{
     }
 
 
-    @Override
-    public Queue<Candle> uploadCandles(String figi, CandleInterval candleInterval, Timestamp fromDate) {
-       // marketServ.getCandles(figi, )
-        return null;
-    }
+
 }

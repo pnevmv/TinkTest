@@ -4,17 +4,23 @@ import Data.CompanyCollection;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
+import com.google.protobuf.Timestamp;
+import ru.tinkoff.piapi.contract.v1.Candle;
+import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
 import static ru.tinkoff.piapi.core.utils.DateUtils.timestampToString;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Queue;
 
 /**
  * Class for unary requests (initialisations, verifications etc)
  */
-public class Connector {
+
+
+public class Connector implements CandleSource{
     private final TradeStream tradeStream;
     private final CandleStream candleStream;
 
@@ -80,6 +86,12 @@ public class Connector {
         } else {
             System.out.printf("Расписание торгов для площадки MOEX. Дата: {%s}. Выходной день\n");
         }
+    }
+
+    @Override
+    public Queue<Candle> uploadCandles(String figi, CandleInterval candleInterval, Timestamp fromDate) {
+        // marketServ.getCandles(figi, )
+        return null;
     }
 }
 
