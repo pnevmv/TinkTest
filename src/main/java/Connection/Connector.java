@@ -5,6 +5,8 @@ import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
 import com.google.protobuf.Timestamp;
+import ru.tinkoff.piapi.contract.v1.Candle;
+import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
 import static ru.tinkoff.piapi.core.utils.DateUtils.timestampToString;
@@ -13,11 +15,12 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Queue;
 
 /**
  * Class for unary requests (initialisations, verifications etc)
  */
-public class Connector {
+public class Connector{
     private final TradeStream tradeStream;
     private final CandleStream candleStream;
     private final InvestApi api;
@@ -90,6 +93,8 @@ public class Connector {
 
         }
     }
+
+
 }
 
 /*
