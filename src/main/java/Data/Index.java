@@ -40,13 +40,14 @@ public class Index {
 
     public void updateHistory(Candle candle) {
 
-        this.candleHistory.remove();
+        if(candleHistory.size() > 0) this.candleHistory.remove();
         HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
                 .setClose(candle.getClose())
                 .setHigh(candle.getHigh())
                 .setLow(candle.getLow())
                 .setOpen(candle.getOpen())
                 .build();
+
         this.candleHistory.add(c);
     }
 

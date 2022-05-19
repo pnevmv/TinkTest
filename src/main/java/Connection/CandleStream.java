@@ -54,9 +54,11 @@ public class CandleStream implements CandleSource{
 
     @Override
     public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack) {
+        int sec = secondsInCandleInterval(candleInterval);
+
         Queue <HistoricCandle> q = new LinkedList<HistoricCandle>();
         for (HistoricCandle histCand : api.getMarketDataService().getCandlesSync(figi,
-                Instant.now().minusSeconds(60 * candleStepsBack),
+                Instant.now().minusSeconds(sec * candleStepsBack),
                 Instant.now(),
                 candleInterval)){
             q.add(histCand);
@@ -64,5 +66,26 @@ public class CandleStream implements CandleSource{
         return q;
     }//todo: протестить
 
+    private int secondsInCandleInterval(CandleInterval candleInterval){
+        switch(candleInterval){
+            case CANDLE_INTERVAL_1_MIN:
+                return 60;
+            case CANDLE_INTERVAL_5_MIN:
+                return 60 * 5;
+            case CANDLE_INTERVAL_15_MIN:
+                return 60 * 15;
+            case CANDLE_INTERVAL_HOUR:
+                return 60 * 60;
+            case CANDLE_INTERVAL_DAY:
+                return 60 * 60 * 24;
+            default:
+                return 60;
+        }
+    }
 
+    public void printQueue(Queue<HistoricCandle> uploadCandles){
+        for(HistoricCandle h : uploadCandles){
+            System.out.println(h.toString());
+        }
+    }
 }
