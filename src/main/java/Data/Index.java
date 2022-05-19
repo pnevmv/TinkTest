@@ -4,6 +4,7 @@ import Connection.*;
 import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
+import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ public class Index {
     private double value;
     private final CandleInterval candleInterval;
     private Timestamp fromDate;
-    private Queue<Candle> candleHistory;
+    private Queue<HistoricCandle> candleHistory;
 
     public Index(IndexType indexType, double value, CandleInterval candleInterval, Timestamp fromDate) {
         this.indexType = indexType;
@@ -29,7 +30,7 @@ public class Index {
         return fromDate;
     }
 
-    public void setCandleHistory(Queue<Candle> candleHistory) {
+    public void setCandleHistory(Queue<HistoricCandle> candleHistory) {
         this.candleHistory = candleHistory;
     }
 
@@ -38,8 +39,15 @@ public class Index {
     }
 
     public void updateHistory(Candle candle) {
+
         this.candleHistory.remove();
-        this.candleHistory.add(candle);
+        HistoricCandle c = HistoricCandle.newBuilder()
+                .setClose(candle.getClose())
+                .setHigh(candle.getHigh())
+                .setLow(candle.getLow())
+                .setOpen(candle.getOpen())
+                .build();
+        this.candleHistory.add(c);
     }
 
     public void setValue(double value) {
@@ -50,14 +58,14 @@ public class Index {
         return indexType;
     }
 
-    public Collection<Candle> getHistory(){
+    public Collection<HistoricCandle> getHistory(){
         return candleHistory;
     }
 
-    public List<Candle> getHistoryAsList(){
-        ArrayList<Candle> res = new ArrayList<>();
+    public List<HistoricCandle> getHistoryAsList(){
+        ArrayList<HistoricCandle> res = new ArrayList<>();
         
-        for(Candle c : candleHistory)   res.add(c);
+        for(HistoricCandle c : candleHistory)   res.add(c);
         return res;
     }
 }

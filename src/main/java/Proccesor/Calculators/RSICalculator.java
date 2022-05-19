@@ -5,6 +5,7 @@ import Data.IndexType;
 
 import Proccesor.MoneyQuotationProcessor;
 import ru.tinkoff.piapi.contract.v1.Candle;
+import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class RSICalculator implements IndexCalculator {
         BigDecimal curCandleCLose = moneyProc.convertFromQuation(candle.getClose());
         List<BigDecimal> historyInNum = new ArrayList<>();
 
-        for(Candle c : company.getIndexByType(IndexType.RSI).getHistoryAsList()){
+        for(HistoricCandle c : company.getIndexByType(IndexType.RSI).getHistoryAsList()){
             historyInNum.add(moneyProc.convertFromQuation(c.getClose()));
         }
 

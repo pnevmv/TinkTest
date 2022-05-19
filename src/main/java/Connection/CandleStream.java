@@ -6,6 +6,7 @@ import Proccesor.StreamProcessor;
 import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
+import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.MarketDataService;
 import ru.tinkoff.piapi.core.stream.MarketDataStreamService;
@@ -48,7 +49,7 @@ public class CandleStream implements CandleSource{
     }
 
     @Override
-    public Queue<Candle> uploadCandles(String figi, CandleInterval candleInterval, Timestamp fromDate) {
+    public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, Timestamp fromDate) {
         return null;
     }
 
