@@ -14,6 +14,7 @@ import ru.tinkoff.piapi.core.stream.MarketDataSubscriptionService;
 import ru.tinkoff.piapi.contract.v1.SubscriptionInterval;
 
 
+import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
 
@@ -53,9 +54,15 @@ public class CandleStream implements CandleSource{
 
     @Override
     public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack) {
-
-        return null;
-    }
+        Queue <HistoricCandle> q = new LinkedList<HistoricCandle>();
+        for (HistoricCandle histCand : api.getMarketDataService().getCandlesSync(figi,
+                Instant.now().minusSeconds(60 * candleStepsBack),
+                Instant.now(),
+                candleInterval)){
+            q.add(histCand);
+        }
+        return q;
+    }//todo: протестить
 
 
 }
