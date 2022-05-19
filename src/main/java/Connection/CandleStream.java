@@ -23,6 +23,8 @@ public class CandleStream implements CandleSource{
     private MarketDataStreamService marketStreamServ;
     private MarketDataService marketServ;
     private MarketDataSubscriptionService stream;
+    private InvestApi api;
+
 
     private int connectionAttempts;
 
@@ -30,6 +32,7 @@ public class CandleStream implements CandleSource{
     public CandleStream(InvestApi api, CompanyCollection companies){
         marketStreamServ = api.getMarketDataStreamService();
         this.companies = companies;
+        this.api = api;
     }
 
     public void initialize(StreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
@@ -49,7 +52,8 @@ public class CandleStream implements CandleSource{
     }
 
     @Override
-    public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, Timestamp fromDate) {
+    public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack) {
+
         return null;
     }
 

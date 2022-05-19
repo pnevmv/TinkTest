@@ -12,22 +12,22 @@ public class Index {
     private final IndexType indexType;
     private double value;
     private final CandleInterval candleInterval;
-    private Timestamp fromDate;
+    private int candleStepsBack;
     private Queue<HistoricCandle> candleHistory;
 
-    public Index(IndexType indexType, double value, CandleInterval candleInterval, Timestamp fromDate) {
+    public Index(IndexType indexType, double value, CandleInterval candleInterval, int candleStepsBack) {
         this.indexType = indexType;
         this.value = value;
         this.candleInterval = candleInterval;
-        this.fromDate = fromDate;
+        this.candleStepsBack = candleStepsBack;
     }
 
     public double getValue() {
         return value;
     }
 
-    public Timestamp getFromDate() {
-        return fromDate;
+    public int getcandleStepsBack() {
+        return candleStepsBack;
     }
 
     public void setCandleHistory(Queue<HistoricCandle> candleHistory) {
@@ -35,13 +35,13 @@ public class Index {
     }
 
     public void loadHistory(String figi, CandleSource candleSource) {
-        this.candleHistory = candleSource.uploadCandles(figi, candleInterval, fromDate);
+        this.candleHistory = candleSource.uploadCandles(figi, candleInterval, candleStepsBack);
     }
 
     public void updateHistory(Candle candle) {
 
         this.candleHistory.remove();
-        HistoricCandle c = HistoricCandle.newBuilder()
+        HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
                 .setClose(candle.getClose())
                 .setHigh(candle.getHigh())
                 .setLow(candle.getLow())
