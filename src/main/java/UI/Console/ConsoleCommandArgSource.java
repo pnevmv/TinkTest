@@ -2,7 +2,6 @@ package UI.Console;
 
 import Commands.CommandArgsSource;
 import Commands.CommandType;
-import Exceptions.IllegalCommandArgsException;
 import Exceptions.NoSuchCommandException;
 
 import java.util.ArrayList;
@@ -15,6 +14,9 @@ public class ConsoleCommandArgSource implements CommandArgsSource {
     Scanner in;
     HashMap<CommandType, Supplier<List<String>>> commandArgsMap;
 
+    {
+        commandArgsMap = new HashMap<>();
+    }
     public ConsoleCommandArgSource(Scanner in){
         this.in = in;
         commandArgsMap.put(CommandType.ADD, this::AddArgs);

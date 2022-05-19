@@ -37,7 +37,7 @@ public class StreamProcessor {
                     curCandleCompany.getIndexByType(index).updateHistory(curCandle);
                 }
 
-                trader.trade(curCandleCompany, curCandle, solver.solution(curCandleCompany));
+                trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
             } catch (CompanyNotFoundException e) {
                 e.printStackTrace();
             }

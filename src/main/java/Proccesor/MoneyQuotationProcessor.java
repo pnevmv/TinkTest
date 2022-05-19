@@ -16,7 +16,6 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
 
     @Override
     public int compare(Quotation o1, Quotation o2) {
-
         BiFunction<Quotation, Quotation, Integer> compare = (q1, q2) ->
                 Comparator.comparing(Quotation::getUnits).thenComparing(Quotation::getNano).compare(q1, q2);
         return compare.apply(o1, o2);
