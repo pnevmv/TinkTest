@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Supplier;
-
+//pizda
 public class ConsoleCommandArgSource implements CommandArgsSource {
     Scanner in;
     HashMap<CommandType, Supplier<List<String>>> commandArgsMap;
