@@ -6,7 +6,7 @@ import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
-import java.time.Instant;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -20,13 +20,12 @@ import java.util.stream.Collectors;
 public class Main {
     static final Logger log = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) {
-
         //не песок
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
         var api = InvestApi.create(token);
         CompanyCollection companies = new CompanyCollection();
         Connector connector = new Connector(api, companies);
-        connector.isAvailableNow(api);
+        connector.printSchedule();
 
         //песок
         //var sandboxToken = "t.iXDw7aTQ7z4uhAElj0l7V07U-65k0AevXbQ4Y9UFKxr3o8y4a4Bv4kLsfu0PVxY_vDSdVg-goXEiVq8vsGNDzw";
