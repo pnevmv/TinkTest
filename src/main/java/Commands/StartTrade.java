@@ -17,7 +17,7 @@ public class StartTrade implements Command{
 
     @Override
     public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(Commands.CommandType.START).get();
+        var args = argsSource.getArgsByCommand(CommandType.START).get();
         if(args.size() != 1) throw new IllegalCommandArgsException("Illegal Number of args");
 
         String figi = args.get(0);

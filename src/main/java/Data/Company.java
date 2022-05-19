@@ -106,8 +106,14 @@ public class Company {
         return this.shareNumber;
     }
 
+    /**
+     *
+     * @param lotNumber
+     * @param price - price of whole deal (lot*price*lotNumber)
+     */
     public void buyShares(int lotNumber, double price) {
         double stopPrice = 0; //TODO: calculating StopPrice
+        this.freeMoney -= price;
         getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice));
     }
 

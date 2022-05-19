@@ -16,7 +16,7 @@ public class Delete implements Command{
 
     @Override
     public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(Commands.CommandType.DELETE).get();
+        var args = argsSource.getArgsByCommand(CommandType.DELETE).get();
         if(args.size() != 1) throw new IllegalCommandArgsException("Illegal Number of args");
 
         String figi = args.get(0);

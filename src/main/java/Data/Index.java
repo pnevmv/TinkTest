@@ -5,7 +5,7 @@ import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
-import java.util.Queue;
+import java.util.*;
 
 public class Index {
     private final IndexType indexType;
@@ -48,5 +48,16 @@ public class Index {
 
     public IndexType getIndexType() {
         return indexType;
+    }
+
+    public Collection<Candle> getHistory(){
+        return candleHistory;
+    }
+
+    public List<Candle> getHistoryAsList(){
+        ArrayList<Candle> res = new ArrayList<>();
+        
+        for(Candle c : candleHistory)   res.add(c);
+        return res;
     }
 }
