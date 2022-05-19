@@ -1,21 +1,23 @@
 package Connection;
 
 import Data.CompanyCollection;
+import Exceptions.AccountNotFoundException;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.StreamProcessor;
 import com.google.protobuf.Timestamp;
-import ru.tinkoff.piapi.contract.v1.Candle;
-import ru.tinkoff.piapi.contract.v1.CandleInterval;
+import ru.tinkoff.piapi.contract.v1.Account;
+import ru.tinkoff.piapi.contract.v1.AccountType;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
-import static ru.tinkoff.piapi.core.utils.DateUtils.timestampToString;
+import ru.tinkoff.piapi.core.models.Portfolio;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Queue;
+import java.util.List;
 
 /**
  * Class for unary requests (initialisations, verifications etc)
@@ -95,10 +97,36 @@ public class Connector{
     }
 
 
+
+    public Portfolio getPortfolio(String accountId) {
+        return api.getOperationsService().getPortfolioSync(accountId);
+    }
+
+    public String findAccount() {
+        List<Account> accounts = api.getUserService().getAccountsSync();
+        String id = null;
+        for (Account account: accounts) {
+            if (account.getType() == AccountType.ACCOUNT_TYPE_TINKOFF) id = account.getId();
+        }
+        try {
+            if (id == null) throw new AccountNotFoundException();
+        } catch (AccountNotFoundException e) {
+            System.out.println("Аккаунт не найден");
+        }
+        return id;
+    }
+
+    public BigDecimal getAmountOfMoney() {
+        return getPortfolio(findAccount()).getTotalAmountCurrencies().getValue();
+    }
+
+    public boolean verifyCompanyByFigi(String figi) {
+
+        return true;
+    }
+
 }
 
 /*
 -верификации компании по фиги
--получение портфолио
--инициализация стримов свеч и торговли
 */
