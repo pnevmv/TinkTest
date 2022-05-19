@@ -5,7 +5,7 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class Delete implements Command{
+public class Delete implements Command {
     CompanyCollection companies;
     CandleStream stream;
 
