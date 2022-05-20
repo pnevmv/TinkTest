@@ -93,6 +93,8 @@ public class RSICalculator implements IndexCalculator {
            if(closes.get(i) > closes.get(i - 1))  pos += closes.get(i) - closes.get(i - 1);
            if(closes.get(i - 1) > closes.get(i))  neg += closes.get(i - 1) - closes.get(i);
         }
+        System.out.println(pos);
+        System.out.println(neg);
         double resOfHandCalc = 100 - 100 / (1 + (pos / neg));
         System.out.println(resOfHandCalc);
         System.out.println(resOfCaculator);
