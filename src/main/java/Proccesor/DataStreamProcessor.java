@@ -14,12 +14,10 @@ public class DataStreamProcessor {
     Candle curCandle;
     Company curCandleCompany;
 
-
     public DataStreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
     }
-
 
     public void process(MarketDataResponse marketDataResponse) {
             if(marketDataResponse.hasCandle()
@@ -39,7 +37,7 @@ public class DataStreamProcessor {
                     for(IndexType index : IndexType.values()){
                         curCandleCompany.setIndexValue(index
                                 , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
-                        curCandleCompany.getIndexByType(index).updateHistory(curCandle);
+                        //curCandleCompany.getIndexByType(index).updateHistory(curCandle);
                         //System.out.println(index);
                         //System.out.println(curCandleCompany.getIndexByType(index).getValue());
                     }
