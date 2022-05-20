@@ -11,15 +11,13 @@ import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 public class StreamProcessor {
     CompanyCollection companies;
     Trader trader;
-    Solver solver;
 
     Candle curCandle;
     Company curCandleCompany;
 
-    public StreamProcessor(CompanyCollection companies, Trader trader, Solver solver){
+    public StreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
-        this.solver = solver;
     }
 
 
