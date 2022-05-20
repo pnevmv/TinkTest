@@ -41,7 +41,7 @@ public class DataStreamProcessor {
                         //System.out.println(index);
                         //System.out.println(curCandleCompany.getIndexByType(index).getValue());
                     }
-                    //trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
+                    trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
                 } catch (CompanyNotFoundException e) {
                     e.printStackTrace();
                 }

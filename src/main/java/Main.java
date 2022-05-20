@@ -26,10 +26,11 @@ public class Main {
     public static void main(String[] args) {
 
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
-        var api = InvestApi.create(token);
+        String appName = "ChnrVn";
+        var api = InvestApi.create(token, appName);
 
         String figi = args[0];
-        System.out.println(api.getInstrumentsService().getShareByFigiSync(figi));
+        //System.out.println(api.getInstrumentsService().getShareByFigiSync(figi));
 
         CompanyCollection companies = new CompanyCollection();
 
@@ -40,7 +41,7 @@ public class Main {
         companies.putCompanyByFigi("BBG004S68829", t);
 
         Connector connector = new Connector(api, companies);
-        Trader trader = new Trader(connector);
+        Trader trader = new Trader(connector, api);
         DataStreamProcessor dataProc = new DataStreamProcessor(companies, trader);
         TradeStreamProcessor tradeProc = new TradeStreamProcessor(companies);
         connector.initializeStreams(dataProc, tradeProc);
