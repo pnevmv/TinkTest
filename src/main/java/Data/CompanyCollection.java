@@ -1,5 +1,7 @@
 package Data;
 
+import Connection.CandleSource;
+import Connection.CandleStream;
 import Exceptions.CompanyNotFoundException;
 import com.sun.tools.javac.Main;
 import org.slf4j.Logger;
@@ -19,6 +21,22 @@ public class CompanyCollection {
 
     public void putCompanyByFigi(String figi, Company company) {
         this.companies.put(figi, company);
+    }
+
+    public void stopTradingByFigi(String figi, CandleStream candleStream) {
+        this.companies.get(figi).tradeOff(candleStream);
+    }
+
+    public void stopTradingForAll(CandleStream candleStream) {
+        for (Company company: companies.values()) {
+            company.tradeOff(candleStream);
+        }
+    }
+
+    public void startTradingForAll(CandleSource candleSource) {
+        for (Company company: this.companies.values()) {
+            company.startTrade(candleSource);
+        }
     }
 
     public Company getByFigi(String figi) throws CompanyNotFoundException {

@@ -77,7 +77,7 @@ public class Index {
     public void printHistory(){
         System.out.println("History:");
         for(HistoricCandle h : candleHistory){
-            System.out.println(h.getHigh().getUnits()); //todo: norm vivod
+            System.out.println(h.getTime().getSeconds()); //todo: norm vivod
         }
     }
 }

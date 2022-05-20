@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 
 //todo: make all collections getters immutable
@@ -28,7 +27,6 @@ public class Main {
 
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
         var api = InvestApi.create(token);
-
 
         String figi = args[0];
         System.out.println(api.getInstrumentsService().getShareByFigiSync(figi));
@@ -42,38 +40,17 @@ public class Main {
         companies.putCompanyByFigi("BBG004S68829", t);
 
         Connector connector = new Connector(api, companies);
-        System.out.println("1");
         Trader trader = new Trader(connector);
-        System.out.println("2");
         DataStreamProcessor dataProc = new DataStreamProcessor(companies, trader);
-        System.out.println("3");
         TradeStreamProcessor tradeProc = new TradeStreamProcessor(companies);
-        System.out.println("4");
-
         connector.initializeStreams(dataProc, tradeProc);
-        System.out.println("5");
 
-        c.startTrade(connector.getCandleStream());
-        t.startTrade(connector.getCandleStream());
+        companies.startTradingForAll(connector.getCandleStream());
 
-       // c.toString();
-       /* for (HistoricCandle cccc : c.getIndexByType(IndexType.RSI).getHistoryAsList()){
-            System.out.println(cccc);
-        }
-        System.out.println();*/
         connector.getCandleStream().updateSubscription();
 
-      /* System.out.println("6");
-
-        System.out.println(companies.getFigisOfTradingCompanies());
-
-        System.out.println("7");*/
         long time = System.currentTimeMillis();
-        System.out.println("6");
-
-         while (System.currentTimeMillis() - time < 121000) {
-
-        }
+         while (System.currentTimeMillis() - time < 121000) { }
 
         /*
         test(api, figi);
@@ -85,23 +62,21 @@ public class Main {
         ssc.updateHistory(Candle.getDefaultInstance());
 
         long time = System.currentTimeMillis();
-        Candle cur;
         StreamProcessor<MarketDataResponse> processor = response -> {
             System.out.println(response.getCandle().getTime().getNanos());
             System.out.println(System.currentTimeMillis());
             if (response.hasPing()) {
                 log.info("ping");
             } else if (response.hasCandle() && response.getCandle().getTime().getSeconds()
-                    != ssc.getSecsOfLAstCAndle())
-            {
+                    != ssc.getSecsOfLAstCAndle()) {
                 ssc.printquue();
                 ssc.updateHistory(response.getCandle());
                 log.info("New Candle Data: {}", response);
             }else if (response.hasSubscribeCandlesResponse()) {
                 var successCount = response.getSubscribeCandlesResponse().getCandlesSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
                 var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                log.info("Sucsess tries: {}", successCount);
-                log.info("неSucsess tries: {}", errorCount);
+                log.info("Success tries: {}", successCount);
+                log.info("Not success tries: {}", errorCount);
             }
         };
 
@@ -111,54 +86,6 @@ public class Main {
         while (System.currentTimeMillis() - time < 185000) {
 
         }
-    }
-    private static void marketdataStreamExample(InvestApi api) {
-        var figi = List.of("BBG004730RP0");
-
-        //Описываем, что делать с приходящими в стриме данными
-        StreamProcessor<MarketDataResponse> processor = response -> {
-            System.out.println("oao " + response.getCandle().getOpen());
-            if (response.hasTradingStatus()) {
-                System.out.println("Заебись8");
-            } else if (response.hasPing()) {
-                System.out.println("Заебись7");
-            } else if (response.hasCandle()) {
-                System.out.println("Заебись6");
-            } else if (response.hasOrderbook()) {
-                System.out.println("Заебись5");
-            } else if (response.hasTrade()) {
-                System.out.println("Заебись4");
-            } else if (response.hasSubscribeCandlesResponse()) {
-                var successCount = response.getSubscribeCandlesResponse().getCandlesSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                System.out.println("Заебись3 " + successCount);
-            } else if (response.hasSubscribeInfoResponse()) {
-                var successCount = response.getSubscribeInfoResponse().getInfoSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                System.out.println("Заебись2");
-            } else if (response.hasSubscribeOrderBookResponse()) {
-                var successCount = response.getSubscribeOrderBookResponse().getOrderBookSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-                System.out.println("Заебись1");
-                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
-            }
-        };
-        Consumer<Throwable> onErrorCallback = error -> System.out.println(error.toString());
-
-        api.getMarketDataStreamService().newStream("candles_stream", processor, onErrorCallback).subscribeCandles(figi);
-
-        long time = System.currentTimeMillis();
-        while (System.currentTimeMillis() - time < 1000 * 10)
-
-        api.getMarketDataStreamService().getStreamById("candles_stream").unsubscribeCandles(figi);
-    }
-
-    private static List<String> randomFigi(InvestApi api, int count) {
-        return api.getInstrumentsService().getTradableSharesSync()
-                .stream()
-                .filter(el -> Boolean.TRUE.equals(el.getApiTradeAvailableFlag()))
-                .map(Share::getFigi)
-                .limit(count)
-                .collect(Collectors.toList());
     }
 
     private  static void candles(InvestApi api){
@@ -182,4 +109,9 @@ public class Main {
             e.printStackTrace();
         }
     }
+
+    /*
+    -сравнить фримани и мани на моем аккаунте
+    -убрать предупреждение пис-да
+    */
 }

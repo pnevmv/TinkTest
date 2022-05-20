@@ -6,7 +6,6 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.util.HashMap;
 
 public class Company {
-    private String name; //TODO: finding names by figi
     private final String figi;
     private double moneyToTrade;
     private double freeMoney;
@@ -85,7 +84,8 @@ public class Company {
         return this.companyIndexes.get(indexType);
     }
 
-    public void tradeOff() {
+    public void tradeOff(CandleStream candleStream) {
+        candleStream.updateSubscription();
         this.isTrading = false;
     }
 
@@ -122,10 +122,6 @@ public class Company {
         return this.openDeals;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public double getLossPercent() {
         return this.lossPercent;
     }
@@ -136,7 +132,7 @@ public class Company {
 
     @Override
     public String toString() {
-        return "Компания: " + this.getName()
+        return "Компания:"
                 + "\nfigi: " + this.getFigi()
                 + "\nКол-во доступных средств на покупку: " + this.getFreeMoney()
                 + "\nДопустимый процент потерь: " + this.getLossPercent()

@@ -23,7 +23,6 @@ public class CandleStream implements CandleSource{
     private MarketDataSubscriptionService stream;
     private InvestApi api;
 
-
     private int connectionAttempts;
 
     { connectionAttempts = 0; }
@@ -45,9 +44,8 @@ public class CandleStream implements CandleSource{
     public void checkConnection(){
 
     }
-    public void updateSubscription(){
+    public void updateSubscription() {
         if(!companies.getFigisOfTradingCompanies().isEmpty()) {
-            System.out.println("update");
             System.out.println(companies.getFigisOfTradingCompanies().get(0));
             stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
         }

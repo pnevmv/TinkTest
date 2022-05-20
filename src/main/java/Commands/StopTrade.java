@@ -23,7 +23,7 @@ public class StopTrade implements Command{
         String figi = args.get(0);
         if(companies.isContainsFigi(figi)) {
             try {
-                companies.getByFigi(figi).tradeOff();
+                companies.getByFigi(figi).tradeOff(stream);
                 stream.updateSubscription();
             } catch (CompanyNotFoundException e) {
                 e.printStackTrace();

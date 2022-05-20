@@ -7,4 +7,5 @@ import java.util.Queue;
 
 public interface CandleSource {
     Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack);
+
 }
