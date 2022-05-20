@@ -1,17 +1,18 @@
 import Connection.Connector;
 import Data.CompanyCollection;
+import Proccesor.DataStreamProcessor;
+import Proccesor.TradeStreamProcessor;
+import Proccesor.Trader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -26,9 +27,11 @@ public class Main {
         var api = InvestApi.create(token);
         CompanyCollection companies = new CompanyCollection();
         Connector connector = new Connector(api, companies);
+        Trader trader = new Trader(connector);
+        DataStreamProcessor dataProc = new DataStreamProcessor(companies, trader);
+        TradeStreamProcessor tradeProc = new TradeStreamProcessor(companies);
 
-        System.out.println(connector.getAmountOfMoney());
-
+        connector.initializeStreams(dataProc, tradeProc);
 
     }
 

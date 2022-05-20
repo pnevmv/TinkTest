@@ -8,14 +8,14 @@ import Data.IndexType;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 
-public class StreamProcessor {
+public class DataStreamProcessor {
     CompanyCollection companies;
     Trader trader;
 
     Candle curCandle;
     Company curCandleCompany;
 
-    public StreamProcessor(CompanyCollection companies, Trader trader){
+    public DataStreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
     }

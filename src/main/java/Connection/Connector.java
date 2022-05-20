@@ -4,7 +4,8 @@ import Data.CompanyCollection;
 import Exceptions.AccountNotFoundException;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
-import Proccesor.StreamProcessor;
+import Proccesor.DataStreamProcessor;
+import Proccesor.TradeStreamProcessor;
 import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Account;
 import ru.tinkoff.piapi.contract.v1.AccountType;
@@ -22,15 +23,22 @@ import java.util.List;
 /**
  * Class for unary requests (initialisations, verifications etc)
  */
+
 public class Connector{
     private final TradeStream tradeStream;
     private final CandleStream candleStream;
     private final InvestApi api;
+    private final CompanyCollection companies;
+
+    public CompanyCollection getCompanies() {
+        return companies;
+    }
 
     public Connector(InvestApi api, CompanyCollection companies) {
         this.tradeStream = new TradeStream(api, companies);
         this.candleStream = new CandleStream(api, companies);
         this.api = api;
+        this.companies = companies;
     }
 
     public TradeStream getTradeStream() {
@@ -41,9 +49,18 @@ public class Connector{
         return this.candleStream;
     }
 
-    public void initializeStreams(StreamProcessor streamProcessor) throws CompanyNotFoundException, OutNumberOfReconnectAttemptsException {
-        tradeStream.initialize(streamProcessor);
-        candleStream.initialize(streamProcessor);
+    public void initializeStreams( DataStreamProcessor dataProc, TradeStreamProcessor tradeProc) {
+
+
+        try {
+            tradeStream.initialize(tradeProc);
+            candleStream.initialize(dataProc);
+        } catch (OutNumberOfReconnectAttemptsException e) {
+            e.printStackTrace();
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public Date timestampToDate(Timestamp timestamp) {
@@ -120,13 +137,5 @@ public class Connector{
         return getPortfolio(findAccount()).getTotalAmountCurrencies().getValue();
     }
 
-    public boolean verifyCompanyByFigi(String figi) {
-
-        return true;
-    }
-
 }
 
-/*
--верификации компании по фиги
-*/
