@@ -113,8 +113,6 @@ public class Connector{
         }
     }
 
-
-
     public Portfolio getPortfolio(String accountId) {
         return api.getOperationsService().getPortfolioSync(accountId);
     }

@@ -32,7 +32,7 @@ public class Company {
 
     private HashMap<IndexType, Index> initializeIndexes(){
         HashMap<IndexType, Index> companyIndex = new  HashMap<>();
-        companyIndex.put(IndexType.RSI, new Index(IndexType.RSI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, 1));
+        companyIndex.put(IndexType.RSI, new Index(IndexType.RSI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, 14));
         companyIndex.put(IndexType.NVI, new Index(IndexType.PVI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, 1));
         companyIndex.put(IndexType.PVI, new Index(IndexType.NVI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, 1));
         return companyIndex;
@@ -83,10 +83,6 @@ public class Company {
 
     public Index getIndexByType(IndexType indexType) {
         return this.companyIndexes.get(indexType);
-    }
-
-    public void tradeOn() {
-        this.isTrading = true;
     }
 
     public void tradeOff() {

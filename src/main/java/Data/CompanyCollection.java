@@ -5,6 +5,7 @@ import com.sun.tools.javac.Main;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -38,14 +39,14 @@ public class CompanyCollection {
     }
 
     public List<String> getFigisOfTradingCompanies() {
-        List<String> figis = List.of();
+        List<String> figis = new ArrayList<>();
         for (Company company : companies.values()) {
             if (company.getIsTrading()) figis.add(company.getFigi());
         }
         try {
             if (figis.isEmpty()) throw new CompanyNotFoundException();
         } catch (CompanyNotFoundException exception) {
-            log.info("Возникла проблема: нет трэйдящих компаний");
+            log.info("peace-da");
         }
         return figis;
     }

@@ -1,6 +1,5 @@
 package Proccesor;
 
-import Connection.CandleStream;
 import Data.Company;
 import Data.CompanyCollection;
 import Exceptions.CompanyNotFoundException;
@@ -15,6 +14,7 @@ public class DataStreamProcessor {
     Candle curCandle;
     Company curCandleCompany;
 
+
     public DataStreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
@@ -22,23 +22,44 @@ public class DataStreamProcessor {
 
 
     public void process(MarketDataResponse marketDataResponse) {
-        if(marketDataResponse.hasCandle()){
-            try {
-                curCandle = marketDataResponse.getCandle();
-                curCandleCompany = companies.getByFigi(curCandle.getFigi());
+            if(marketDataResponse.hasCandle()
+                    && checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse)
+            ){
+                try {
+                    curCandle = marketDataResponse.getCandle();
+                    curCandleCompany = companies.getByFigi(curCandle.getFigi());
 
-                for(IndexType index : IndexType.values()){
-                    curCandleCompany.setIndexValue(index
-                            , IndexCalculators.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
-                    curCandleCompany.getIndexByType(index).updateHistory(curCandle);
+                    System.out.println(curCandle);
+                    curCandleCompany.getIndexByType(IndexType.RSI).printHistory();
+
+                    IndexCalculators i = new IndexCalculators();
+
+                    //trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
+
+                    for(IndexType index : IndexType.values()){
+                        curCandleCompany.setIndexValue(index
+                                , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
+                        curCandleCompany.getIndexByType(index).updateHistory(curCandle);
+                        //System.out.println(index);
+                        //System.out.println(curCandleCompany.getIndexByType(index).getValue());
+                    }
+                    //trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
+                } catch (CompanyNotFoundException e) {
+                    e.printStackTrace();
                 }
-
-                trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
-            } catch (CompanyNotFoundException e) {
-                e.printStackTrace();
             }
-        }
 
+    }
+
+    private boolean checkIfNewCandleForIndex(IndexType type, MarketDataResponse marketDataResponse){
+        try {
+            return companies.getByFigi(
+                    marketDataResponse.getCandle().getFigi()).getIndexByType(IndexType.RSI)
+                    .getTimeOfLastEl() != marketDataResponse.getCandle().getTime().getSeconds();
+        } catch (CompanyNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

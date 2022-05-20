@@ -5,7 +5,6 @@ import Exceptions.IllegalCommandArgsException;
 
 public class AddCompany implements Command{
     /**
-     *
      * @param argsSource - figi, moneyToTrade, lossPercent, TakeProfit
      */
     @Override
