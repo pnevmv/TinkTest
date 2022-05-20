@@ -61,9 +61,12 @@ public class RSICalculator implements IndexCalculator {
                             .subtract(curCandleCLose)
             );
 
+
         company.getIndexByType(IndexType.RSI).updateHistory(candle); //update history of candles
 
+
         if(negative.equals(BigDecimal.ZERO)) return 100; //case N = 0; RSI = 100
+
         return  RSICalcFromNegAndPos(positive, negative).doubleValue();
     }
 

@@ -1,17 +1,21 @@
 import Connection.Connector;
+import Data.Company;
 import Data.CompanyCollection;
+import Data.IndexType;
+import Proccesor.CheckClass;
+import Proccesor.DataStreamProcessor;
+import Proccesor.TradeStreamProcessor;
+import Proccesor.Trader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.stream.StreamProcessor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -24,14 +28,90 @@ public class Main {
 
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";
         var api = InvestApi.create(token);
+
+
+        String figi = args[0];
+        System.out.println(api.getInstrumentsService().getShareByFigiSync(figi));
+
         CompanyCollection companies = new CompanyCollection();
+
+        Company c = new Company(figi, 500, 101, 2, 7);
+        companies.putCompanyByFigi(figi, c);
+
+        Company t = new Company("BBG004S68829", 500, 101, 2, 7);
+        companies.putCompanyByFigi("BBG004S68829", t);
+
         Connector connector = new Connector(api, companies);
+        System.out.println("1");
+        Trader trader = new Trader(connector);
+        System.out.println("2");
+        DataStreamProcessor dataProc = new DataStreamProcessor(companies, trader);
+        System.out.println("3");
+        TradeStreamProcessor tradeProc = new TradeStreamProcessor(companies);
+        System.out.println("4");
 
-        System.out.println(connector.getAmountOfMoney());
+        connector.initializeStreams(dataProc, tradeProc);
+        System.out.println("5");
 
+        c.startTrade(connector.getCandleStream());
+        t.startTrade(connector.getCandleStream());
 
+       // c.toString();
+       /* for (HistoricCandle cccc : c.getIndexByType(IndexType.RSI).getHistoryAsList()){
+            System.out.println(cccc);
+        }
+        System.out.println();*/
+        connector.getCandleStream().updateSubscription();
+
+      /* System.out.println("6");
+
+        System.out.println(companies.getFigisOfTradingCompanies());
+
+        System.out.println("7");*/
+        long time = System.currentTimeMillis();
+        System.out.println("6");
+
+         while (System.currentTimeMillis() - time < 121000) {
+
+        }
+
+        /*
+        test(api, figi);
+        */
     }
 
+    private static void test(InvestApi api, String figi){
+        CheckClass ssc = new CheckClass();
+        ssc.updateHistory(Candle.getDefaultInstance());
+
+        long time = System.currentTimeMillis();
+        Candle cur;
+        StreamProcessor<MarketDataResponse> processor = response -> {
+            System.out.println(response.getCandle().getTime().getNanos());
+            System.out.println(System.currentTimeMillis());
+            if (response.hasPing()) {
+                log.info("ping");
+            } else if (response.hasCandle() && response.getCandle().getTime().getSeconds()
+                    != ssc.getSecsOfLAstCAndle())
+            {
+                ssc.printquue();
+                ssc.updateHistory(response.getCandle());
+                log.info("New Candle Data: {}", response);
+            }else if (response.hasSubscribeCandlesResponse()) {
+                var successCount = response.getSubscribeCandlesResponse().getCandlesSubscriptionsList().stream().filter(el -> el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                var errorCount = response.getSubscribeTradesResponse().getTradeSubscriptionsList().stream().filter(el -> !el.getSubscriptionStatus().equals(SubscriptionStatus.SUBSCRIPTION_STATUS_SUCCESS)).count();
+                log.info("Sucsess tries: {}", successCount);
+                log.info("неSucsess tries: {}", errorCount);
+            }
+        };
+
+        Consumer<Throwable> streamError = e -> {System.out.println(e.toString()); }; //todo: logger, correct reconnection
+        api.getMarketDataStreamService().newStream("Candles", processor, streamError)
+                .subscribeCandles(List.of(figi), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
+        while (System.currentTimeMillis() - time < 185000) {
+
+        }
+    }
     private static void marketdataStreamExample(InvestApi api) {
         var figi = List.of("BBG004730RP0");
 

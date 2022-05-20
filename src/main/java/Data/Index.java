@@ -12,7 +12,7 @@ public class Index {
     private double value;
     private final CandleInterval candleInterval;
     private int candleStepsBack;
-    private Queue<HistoricCandle> candleHistory;
+    private ArrayDeque<HistoricCandle> candleHistory;
 
     public Index(IndexType indexType, double value, CandleInterval candleInterval, int candleStepsBack) {
         this.indexType = indexType;
@@ -30,24 +30,25 @@ public class Index {
     }
 
     public void setCandleHistory(Queue<HistoricCandle> candleHistory) {
-        this.candleHistory = candleHistory;
+        this.candleHistory = new ArrayDeque<>(candleHistory);
     }
 
     public void loadHistory(String figi, CandleSource candleSource) {
-        this.candleHistory = candleSource.uploadCandles(figi, candleInterval, candleStepsBack);
+        this.candleHistory = new ArrayDeque<>(candleSource.uploadCandles(figi, candleInterval, candleStepsBack));
     }
 
     public void updateHistory(Candle candle) {
 
-        if(candleHistory.size() > 0) this.candleHistory.remove();
+        if(candleHistory.size() > 0) this.candleHistory.removeFirst();
         HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
                 .setClose(candle.getClose())
                 .setHigh(candle.getHigh())
                 .setLow(candle.getLow())
                 .setOpen(candle.getOpen())
+                .setTime(candle.getTime())
                 .build();
 
-        this.candleHistory.add(c);
+        this.candleHistory.addLast(c);
     }
 
     public void setValue(double value) {
@@ -67,5 +68,16 @@ public class Index {
         
         for(HistoricCandle c : candleHistory)   res.add(c);
         return res;
+    }
+
+    public long getTimeOfLastEl(){
+        return candleHistory.getLast().getTime().getSeconds(); // time of last el
+    }
+
+    public void printHistory(){
+        System.out.println("History:");
+        for(HistoricCandle h : candleHistory){
+            System.out.println(h.getHigh().getUnits()); //todo: norm vivod
+        }
     }
 }
