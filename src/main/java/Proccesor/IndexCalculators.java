@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class IndexCalculators {
     static HashMap<IndexType, IndexCalculator> calcMaps;
 
-    public  IndexCalculators(){
+    static {
         calcMaps.put(IndexType.RSI, new RSICalculator());
         calcMaps.put(IndexType.NVI, new NVICalculator());
         calcMaps.put(IndexType.PVI, new PVICalculator());
