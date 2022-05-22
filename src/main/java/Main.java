@@ -72,5 +72,4 @@ public class Main {
 
         return token;
     }
-    //-сравнить фримани и мани на моем аккаунте
 }
