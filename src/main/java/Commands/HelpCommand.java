@@ -16,11 +16,9 @@ public class HelpCommand extends AbstractCommand {
     public boolean execute(String argument) {
         try {
             if (!argument.isEmpty()) throw new IllegalArgumentException();
-            return true;
-
         } catch (IllegalArgumentException exception) {
-            Console.println("Executing the: '" + getName() + "', but illegal number of arguments");
+            Console.printError("The command was entered in the wrong format!");
         }
-        return false;
+        return true;
     }
 }

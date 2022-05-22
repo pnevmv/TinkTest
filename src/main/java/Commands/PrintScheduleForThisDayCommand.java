@@ -3,6 +3,7 @@ package Commands;
 import Connection.Connector;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
+import UI.Console.Console;
 
 public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private Connector connector;
@@ -14,9 +15,12 @@ public class PrintScheduleForThisDayCommand extends AbstractCommand {
 
     @Override
     public boolean execute(String argument) throws CommandException {
-        if (argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
-
-        connector.printScheduleForThisDay();
+        try {
+            if (!argument.isEmpty()) throw new IllegalCommandArgsException();
+            connector.printScheduleForThisDay();
+        } catch (IllegalCommandArgsException exception) {
+            Console.printError("The command was entered in the wrong format!");
+        }
         return true;
     }
 }

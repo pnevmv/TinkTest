@@ -3,17 +3,14 @@ package Data;
 import Connection.CandleSource;
 import Connection.CandleStream;
 import Exceptions.CompanyNotFoundException;
-import com.sun.tools.javac.Main;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import UI.Console.Console;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class CompanyCollection {
-    private HashMap<String, Company> companies;
-    private Logger log = LoggerFactory.getLogger(Main.class);
+    private final HashMap<String, Company> companies;
 
     public CompanyCollection() {
         this.companies = new HashMap<>();
@@ -49,7 +46,7 @@ public class CompanyCollection {
     }
 
     public List<String> getFigis() {
-        List<String> figis = List.of();
+        List<String> figis = new ArrayList<>(List.of());
         for (Company company :companies.values()) {
             figis.add(company.getFigi());
         }
@@ -62,20 +59,15 @@ public class CompanyCollection {
             if (company.getIsTrading()) figis.add(company.getFigi());
         }
         try {
-            if (figis.isEmpty()) throw new CompanyNotFoundException("There's no companies");
+            if (figis.isEmpty()) throw new CompanyNotFoundException("There's no companies yet");
         } catch (CompanyNotFoundException exception) {
+            Console.printError(exception.getMessage());
         }
         return figis;
     }
 
     public Company getCompanyByFigi(String figi) {
         return this.companies.get(figi);
-    }
-
-    public void printCompanies() {
-        for (Company company: companies.values()) {
-            System.out.println(company.toString());
-        }
     }
 
     public int getNumberOfCompanies() {

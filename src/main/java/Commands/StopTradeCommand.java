@@ -4,6 +4,7 @@ import Connection.CandleStream;
 import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
+import UI.Console.Console;
 
 public class StopTradeCommand extends AbstractCommand {
     private CompanyCollection companies;
@@ -17,11 +18,11 @@ public class StopTradeCommand extends AbstractCommand {
 
     @Override
     public boolean execute(String argument) throws CommandException {
-        if(argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
-
-        String figi = argument;
-        if (companies.isContainsFigi(figi)) {
-            companies.stopTradingByFigi(figi, stream);
+        try {
+            if (argument.isEmpty()) throw new IllegalCommandArgsException("The command was entered in wrong format!");
+            companies.stopTradingByFigi(argument, stream);
+        } catch (IllegalCommandArgsException exception) {
+            Console.printError(exception.getMessage());
         }
         return true;
     }

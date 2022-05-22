@@ -1,17 +1,14 @@
 package Commands;
 
-import Data.Company;
 import Data.CompanyCollection;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
-import java.util.Collection;
-
-public class ShowCommand extends AbstractCommand {
+public class ShowFigisCommand extends AbstractCommand {
     CompanyCollection companyCollection;
 
-    public ShowCommand(CompanyCollection companyCollection) {
-        super("show", "Display all companies");
+    public ShowFigisCommand(CompanyCollection companyCollection) {
+        super("show-figis", "display figi of each company");
         this.companyCollection = companyCollection;
     }
 
@@ -19,12 +16,11 @@ public class ShowCommand extends AbstractCommand {
     public boolean execute(String argument) {
         try {
             if (!argument.isEmpty()) throw new IllegalCommandArgsException();
-            Collection<Company> companies = companyCollection.getCompanies().values();
-            for (Company company: companies) {
-                Console.println(company.toString());
+            for (String figi: companyCollection.getFigis()) {
+                Console.println(figi);
             }
         } catch (IllegalCommandArgsException exception) {
-            Console.printError("The command was entered in wrong format!");
+            Console.printError("The command was entered in the wrong format!");
         }
         return true;
     }

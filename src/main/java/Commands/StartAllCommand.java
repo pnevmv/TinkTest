@@ -6,12 +6,12 @@ import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
-public class DeleteCommand  extends AbstractCommand {
+public class StartAllCommand extends AbstractCommand {
     private final CompanyCollection companies;
     private final CandleStream stream;
 
-    public DeleteCommand(CompanyCollection companies, CandleStream stream){
-        super("delete {figi}", "Delete company by figi");
+    public StartAllCommand(CompanyCollection companies, CandleStream stream) {
+        super("start-all", "Start trade all companies");
         this.companies = companies;
         this.stream = stream;
     }
@@ -19,11 +19,12 @@ public class DeleteCommand  extends AbstractCommand {
     @Override
     public boolean execute(String argument) throws CommandException {
         try {
-            if (argument.isEmpty()) throw new IllegalArgumentException();
-            if(companies.isContainsFigi(argument)) companies.removeByFigi(argument);
+            if (!argument.isEmpty()) throw new IllegalCommandArgsException("The command was entered in wrong format!");
+
+            companies.startTradingForAll(stream);
             stream.updateSubscription();
-        } catch (IllegalArgumentException exception) {
-            Console.printError("The command was entered in the wrong format!");
+        } catch (IllegalCommandArgsException exception) {
+            Console.printError(exception.getMessage());
         }
         return true;
     }

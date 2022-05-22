@@ -2,10 +2,11 @@ package Commands;
 
 import UI.Console.Console;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Set;
 
+/**
+ * Class for managing commands
+ */
 public class CommandManager {
     private final HashMap<String, Command> commands = new HashMap<>();
 
@@ -18,17 +19,14 @@ public class CommandManager {
     /**
      * Prints that command is not found.
      * @param command Command, which is not found.
-     * @return Command exit status.
      */
-    public boolean noSuchCommand(String command) {
+    public void noSuchCommand(String command) {
         Console.println("Command '" + command + "' not found. Type 'help' for help.");
-        return false;
     }
 
     /**
      * Prints info about the all commands.
      * @param argument It's argument.
-     * @return Command exit status.
      */
     public void helpCommand(String argument) {
         HelpCommand helpCommand = new HelpCommand();

@@ -6,9 +6,12 @@ import Exceptions.CommandException;
 
 import java.util.*;
 
+/**
+ * Class for communicating with the user
+ */
 public class Console {
-    private CommandManager commandManager;
-    private Scanner scanner;
+    private final CommandManager commandManager;
+    private final Scanner scanner;
 
     public Console(CommandManager commandManager, Scanner scanner) {
         this.commandManager = commandManager;
@@ -37,30 +40,30 @@ public class Console {
 
     /**
      * Launch the command.
-     *
      * @param userCommand Command to launch.
      * @return Exit code.
      */
-
     private int launchCommand(String[] userCommand) throws CommandException {
         HashMap<String, Command> commands = commandManager.getCommands();
 
-        if (userCommand[0].equals("exit")) return 1;
-        if (userCommand[0].equals("help")) {
-            commandManager.helpCommand(userCommand[1]);
-            return 0;
-        }
         if (!commands.containsKey(userCommand[0])) {
             commandManager.noSuchCommand(userCommand[0]);
             return 0;
         }
+
+        if (userCommand[0].equals("exit")) return 1;
+
+        if (userCommand[0].equals("help")) {
+            commandManager.helpCommand(userCommand[1]);
+            return 0;
+        }
+
         commands.get(userCommand[0]).execute(userCommand[1]);
         return 0;
     }
 
     /**
      * Prints toOut.toString() to Console
-     *
      * @param toOut Object to print
      */
     public static void print(Object toOut) {
@@ -69,7 +72,6 @@ public class Console {
 
     /**
      * Prints toOut.toString() + \n to Console
-     *
      * @param toOut Object to print
      */
     public static void println(Object toOut) {
@@ -78,7 +80,6 @@ public class Console {
 
     /**
      * Prints formatted 2-element table to Console
-     *
      * @param element1 Left element of the row.
      * @param element2 Right element of the row.
      */
@@ -88,7 +89,6 @@ public class Console {
 
     /**
      * Prints error: toOut.toString() to Console
-     *
      * @param toOut Error to print
      */
     public static void printError(Object toOut) {
