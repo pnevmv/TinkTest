@@ -36,6 +36,7 @@ public class Company {
         companyIndex.put(IndexType.PVI, new Index(IndexType.NVI, 0, CandleInterval.CANDLE_INTERVAL_1_MIN, 1));
         return companyIndex;
     }
+
     public Company(String figi, double moneyToTrade, double freeMoney, double lossPercent, double takeProfit, boolean isTrading, int shareNumber, int lot, HashMap<IndexType, Index> companyIndexes, OpenDeals openDeals) {
         this.figi = figi;
         this.moneyToTrade = moneyToTrade;

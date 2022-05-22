@@ -5,11 +5,11 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class Delete implements Command {
-    CompanyCollection companies;
-    CandleStream stream;
+public class DeleteCommand implements Command {
+    private CompanyCollection companies;
+    private CandleStream stream;
 
-    public Delete(CompanyCollection companies, CandleStream stream){
+    public DeleteCommand(CompanyCollection companies, CandleStream stream){
         this.companies = companies;
         this.stream = stream;
     }

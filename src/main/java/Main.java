@@ -1,7 +1,6 @@
 import Connection.Connector;
 import Data.Company;
 import Data.CompanyCollection;
-import Data.IndexType;
 import Proccesor.CheckClass;
 import Proccesor.DataStreamProcessor;
 import Proccesor.TradeStreamProcessor;
@@ -52,6 +51,7 @@ public class Main {
 
         long time = System.currentTimeMillis();
          while (System.currentTimeMillis() - time < 121000) { }
+
 
         /*
         test(api, figi);
@@ -110,9 +110,5 @@ public class Main {
             e.printStackTrace();
         }
     }
-
-    /*
-    -сравнить фримани и мани на моем аккаунте
-    -убрать предупреждение пис-да
-    */
+    //-сравнить фримани и мани на моем аккаунте
 }

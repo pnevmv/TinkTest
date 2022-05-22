@@ -7,8 +7,8 @@ import Exceptions.CompanyNotFoundException;
 import Exceptions.IllegalCommandArgsException;
 
 public class StartTrade implements Command{
-    CompanyCollection companies;
-    CandleStream stream;
+    private CompanyCollection companies;
+    private CandleStream stream;
 
     public StartTrade(CompanyCollection companies, CandleStream stream){
         this.companies = companies;

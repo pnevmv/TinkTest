@@ -9,6 +9,7 @@ import Proccesor.TradeStreamProcessor;
 import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.Account;
 import ru.tinkoff.piapi.contract.v1.AccountType;
+import ru.tinkoff.piapi.contract.v1.Share;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.models.Portfolio;
@@ -50,17 +51,15 @@ public class Connector{
     }
 
     public void initializeStreams( DataStreamProcessor dataProc, TradeStreamProcessor tradeProc) {
-
-
         try {
             tradeStream.initialize(tradeProc);
             candleStream.initialize(dataProc);
         } catch (OutNumberOfReconnectAttemptsException e) {
             e.printStackTrace();
         } catch (CompanyNotFoundException e) {
+            System.out.println("Please input again:");
             e.printStackTrace();
         }
-
     }
 
     public Date timestampToDate(Timestamp timestamp) {
@@ -73,12 +72,10 @@ public class Connector{
 
         var today = tradingSchedules.getDays(0);
         var now = System.currentTimeMillis() / 1000;
-        if (today.getIsTradingDay()
-                && now  >= today.getStartTime().getSeconds()
-                && now < today.getEndTime().getSeconds()) {
-            return true;
-        }
-        else return false;
+
+        return today.getIsTradingDay()
+                && now >= today.getStartTime().getSeconds()
+                && now < today.getEndTime().getSeconds();
     }
 
     public void printScheduleForThisDay() {
@@ -135,5 +132,10 @@ public class Connector{
         return getPortfolio(findAccount()).getTotalAmountCurrencies().getValue();
     }
 
+    public boolean isExistByFigi(String figi) {
+        Share share;
+        share = api.getInstrumentsService().getShareByFigiSync(figi);
+        return share.isInitialized();
+    }
 }
 
