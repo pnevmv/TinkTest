@@ -43,7 +43,7 @@ public class OpenDeals {
     public BigDecimal getAveragePrice() {
         BigDecimal price = BigDecimal.ZERO;
         for (Deal deal: openDeals) {
-            price.add(deal.getPrice());
+            price = price.add(deal.getPrice());
         }
 
         return price.divide(BigDecimal.valueOf(openDeals.size()), 9, RoundingMode.HALF_DOWN);

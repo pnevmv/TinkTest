@@ -110,17 +110,19 @@ public class Company {
      * @param price - price of whole deal (lot*price*lotNumber)
      */
     public void buyShares(long lotNumber, BigDecimal price, String id) {
-        BigDecimal lossCoefficient = new BigDecimal(1 - lossPercent / 100);
-
+        BigDecimal lossCoefficient = BigDecimal.valueOf(1 - lossPercent / 100);
         BigDecimal stopPrice = (price.multiply(lossCoefficient));
-        this.freeMoney -= (price.multiply(BigDecimal.valueOf(lotNumber))).doubleValue();
-
         getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice, id));
+
+        this.freeMoney -= (price.multiply(BigDecimal.valueOf(lotNumber))).doubleValue();
+        this.shareNumber += lotNumber * this.lot;
     }
 
     public void sellShares (Deal deal, long lotNumber, BigDecimal price, String id) {
         getOpenDeals().deletePartly(deal, lotNumber);
+
         this.freeMoney += (price.multiply(BigDecimal.valueOf(lotNumber))).doubleValue();
+        this.shareNumber -= lotNumber * this.lot;
     }
 
 
