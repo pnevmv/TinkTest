@@ -8,7 +8,7 @@ import UI.Console.Console;
 import java.util.Collection;
 
 public class ShowCommand extends AbstractCommand {
-    private CompanyCollection companyCollection;
+    private final CompanyCollection companyCollection;
 
     public ShowCommand(CompanyCollection companyCollection) {
         super("show", "Display all companies");

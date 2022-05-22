@@ -9,7 +9,7 @@ public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private final Connector connector;
 
     public PrintScheduleForThisDayCommand(Connector connector) {
-        super("print-schedule-today {name of exchange}", "Display schedule of exchange for this day (example: moex, spb)");
+        super("print-schedule-today {exchange}", "Display schedule of exchange for this day (example: moex, spb)");
         this.connector = connector;
     }
 

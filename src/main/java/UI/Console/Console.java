@@ -22,6 +22,7 @@ public class Console {
      * Mode for catching commands from user input.
      */
     public void interactiveMode() throws CommandException{
+        Console.println("Type 'help' to display all commands");
         String[] userCommand;
         int commandStatus;
         try {
@@ -46,17 +47,17 @@ public class Console {
     private int launchCommand(String[] userCommand) throws CommandException {
         HashMap<String, Command> commands = commandManager.getCommands();
 
-        if (!commands.containsKey(userCommand[0])) {
-            commandManager.noSuchCommand(userCommand[0]);
-            return 0;
-        }
-
         if (userCommand[0].equals("exit")) return 1;
 
         if (userCommand[0].equals("help")) {
             commandManager.helpCommand(userCommand[1]);
             return 0;
         }
+        if (!commands.containsKey(userCommand[0])) {
+            commandManager.noSuchCommand(userCommand[0]);
+            return 0;
+        }
+
 
         commands.get(userCommand[0]).execute(userCommand[1]);
         return 0;

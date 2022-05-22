@@ -9,7 +9,7 @@ public class PrintScheduleCommand  extends AbstractCommand {
     private final Connector connector;
 
     public PrintScheduleCommand (Connector connector) {
-        super("print-schedule {name of exchange}", "Display schedule of exchange (example: moex, spb)");
+        super("print-schedule {exchange}", "Display schedule of exchange (example: moex, spb)");
         this.connector = connector;
     }
 

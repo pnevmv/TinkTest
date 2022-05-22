@@ -61,7 +61,7 @@ public class CompanyCollection {
         try {
             if (figis.isEmpty()) throw new CompanyNotFoundException("There's no companies yet");
         } catch (CompanyNotFoundException exception) {
-            Console.printError(exception.getMessage());
+            Console.println("info: " + exception.getMessage());
         }
         return figis;
     }

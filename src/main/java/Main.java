@@ -8,6 +8,7 @@ import Proccesor.TradeStreamProcessor;
 import Proccesor.Trader;
 import UI.Console.Console;
 import ru.tinkoff.piapi.core.InvestApi;
+import ru.tinkoff.piapi.core.exception.ApiRuntimeException;
 
 import java.util.Scanner;
 
@@ -20,11 +21,11 @@ public class Main {
         try (Scanner userScanner = new Scanner(System.in)) {
 
             String token = initializeToken(userScanner);
-            var api = InvestApi.create(token, appName);
+
+            InvestApi api = InvestApi.create(token, appName);
 
             CompanyCollection companyCollection = new CompanyCollection();
             Connector connector = new Connector(api, companyCollection);
-
             Trader trader = new Trader(connector, api);
             DataStreamProcessor dataProc = new DataStreamProcessor(companyCollection, trader);
             TradeStreamProcessor tradeProc = new TradeStreamProcessor(companyCollection);
@@ -33,8 +34,8 @@ public class Main {
             CompanyBuilder companyBuilder = new CompanyBuilder(userScanner);
             CommandManager commandManager = new CommandManager(
                     new HelpCommand(),
-                    new AddCompanyCommand(companyBuilder, companyCollection),
-                    new ChangeCompanyCommand(companyBuilder, companyCollection),
+                    new AddCompanyCommand(companyBuilder, companyCollection, connector),
+                    new ChangeCompanyCommand(companyBuilder, companyCollection, connector),
                     new DeleteCommand(companyCollection, connector.getCandleStream()),
                     new PrintScheduleCommand(connector),
                     new PrintScheduleForThisDayCommand(connector),
@@ -48,7 +49,9 @@ public class Main {
             Console console = new Console(commandManager, userScanner);
             console.interactiveMode();
         } catch (CommandException exception) {
-            System.out.println(exception.getMessage());
+            Console.printError(exception.getMessage());
+        } catch (ApiRuntimeException exception) {
+            Console.printError("Can't create API with this token, reboot app");
         }
     }
 
