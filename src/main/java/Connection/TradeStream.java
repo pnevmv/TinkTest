@@ -1,13 +1,13 @@
 package Connection;
 
 import Data.CompanyCollection;
+import Data.Deal;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.TradeStreamProcessor;
 import ru.tinkoff.piapi.contract.v1.OrderDirection;
 import ru.tinkoff.piapi.contract.v1.OrderType;
 import ru.tinkoff.piapi.contract.v1.Quotation;
-import ru.tinkoff.piapi.contract.v1.TradesStreamResponse;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.OrdersService;
 import ru.tinkoff.piapi.core.stream.OrdersStreamService;
@@ -33,13 +33,15 @@ public class TradeStream {
         this.companies = companies;
     }
 
-    public void initialize(TradeStreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
+    public void initialize(TradeStreamProcessor processor) {
         Consumer<Throwable> streamError = e -> {System.out.println(e.toString()); }; //todo: logger, correct reconnection
-        orderStreamService.subscribeTrades(this::responseProcess, streamError, List.of(api.getUserService().getAccountsSync().get(0).getId()));
+        orderStreamService.subscribeTrades(processor::responseProcess
+                , streamError
+                , List.of(api.getUserService().getAccountsSync().get(0).getId()));
         //todo: сделать нормальное получение акаауннтов
     }
 
-    public boolean buyStock(int lots, Quotation price, String figi){
+    public boolean buyStock(long lots, Quotation price, String figi){
         tradeServ.postOrderSync(
                 figi,
                 lots,
@@ -52,7 +54,7 @@ public class TradeStream {
         orderId++;
         return true;
     }
-    public boolean sellStock(int lots, Quotation price, String figi){
+    public boolean sellStock(long lots, Quotation price, String figi, Deal deal){
         tradeServ.postOrderSync(
                 figi,
                 lots,
@@ -60,16 +62,10 @@ public class TradeStream {
                 OrderDirection.ORDER_DIRECTION_SELL,
                 api.getUserService().getAccountsSync().get(0).getId(),
                 OrderType.ORDER_TYPE_MARKET,
-                String.valueOf(orderId)
+                String.valueOf(deal.getId())
         ); //todo: сделать нормальное получение акаауннтов
-        orderId++;
         return false;
     }
 
-    private void responseProcess(TradesStreamResponse tradesStreamResponse) {
-        if(tradesStreamResponse.hasOrderTrades()){
-            tradesStreamResponse.getOrderTrades();
 
-        }
-    }
 }
