@@ -4,18 +4,19 @@ import Connection.Connector;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class PrintScheduleForThisDayCommand implements Command{
+public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private Connector connector;
 
     public PrintScheduleForThisDayCommand(Connector connector) {
+        super("print-schedule-today", "prints schedule for this day");
         this.connector = connector;
     }
 
     @Override
-    public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(CommandType.DELETE).get();
-        if(args.size() != 0) throw new IllegalCommandArgsException("Illegal Number of args");
+    public boolean execute(String argument) throws CommandException {
+        if (argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
 
         connector.printScheduleForThisDay();
+        return true;
     }
 }

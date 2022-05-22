@@ -5,23 +5,24 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class StopTrade implements Command{
+public class StopTrade extends AbstractCommand {
     private CompanyCollection companies;
     private CandleStream stream;
 
-    public StopTrade(CompanyCollection companies, CandleStream stream){
+    public StopTrade(CompanyCollection companies, CandleStream stream) {
+        super("stop-trade {figi}", "stops trading for company by figi");
         this.companies = companies;
         this.stream = stream;
     }
 
     @Override
-    public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(CommandType.STOP).get();
-        if(args.size() != 1) throw new IllegalCommandArgsException("Illegal Number of args");
+    public boolean execute(String argument) throws CommandException {
+        if(argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
 
-        String figi = args.get(0);
-        if(companies.isContainsFigi(figi)) {
+        String figi = argument;
+        if (companies.isContainsFigi(figi)) {
             companies.stopTradingByFigi(figi, stream);
         }
+        return true;
     }
 }

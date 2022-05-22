@@ -72,6 +72,12 @@ public class CompanyCollection {
         return this.companies.get(figi);
     }
 
+    public void printCompanies() {
+        for (Company company: companies.values()) {
+            System.out.println(company.toString());
+        }
+    }
+
     public int getNumberOfCompanies() {
         return this.companies.size();
     }

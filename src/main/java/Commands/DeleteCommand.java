@@ -5,22 +5,25 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class DeleteCommand implements Command {
-    private CompanyCollection companies;
-    private CandleStream stream;
+public class DeleteCommand  extends AbstractCommand {
+    private String name;
+    private String description;
+    private final CompanyCollection companies;
+    private final CandleStream stream;
 
     public DeleteCommand(CompanyCollection companies, CandleStream stream){
+        super("delete {figi}", "deletes company by figi");
         this.companies = companies;
         this.stream = stream;
     }
 
     @Override
-    public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(CommandType.DELETE).get();
-        if(args.size() != 1) throw new IllegalCommandArgsException("Illegal Number of args");
+    public boolean execute(String argument) throws CommandException {
+        if(argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
 
-        String figi = args.get(0);
+        String figi = argument;
         if(companies.isContainsFigi(figi)) companies.removeByFigi(figi);
         stream.updateSubscription();
+        return true;
     }
 }

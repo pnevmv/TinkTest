@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 //todo: make all collections getters immutable
 public class Main {
     static final Logger log = LoggerFactory.getLogger(Main.class);
+
     public static void main(String[] args) {
 
         var token = "t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ";

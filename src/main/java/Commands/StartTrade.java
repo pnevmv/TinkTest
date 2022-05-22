@@ -6,28 +6,28 @@ import Exceptions.CommandException;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.IllegalCommandArgsException;
 
-public class StartTrade implements Command{
+public class StartTrade extends AbstractCommand {
     private CompanyCollection companies;
     private CandleStream stream;
 
-    public StartTrade(CompanyCollection companies, CandleStream stream){
+    public StartTrade(CompanyCollection companies, CandleStream stream) {
+        super("star-trade {figi}", "starts trade company by figi");
         this.companies = companies;
         this.stream = stream;
     }
 
     @Override
-    public void execute(CommandArgsSource argsSource) throws CommandException {
-        var args = argsSource.getArgsByCommand(CommandType.START).get();
-        if(args.size() != 1) throw new IllegalCommandArgsException("Illegal Number of args");
+    public boolean execute(String argument) throws CommandException {
+        if(argument.isEmpty()) throw new IllegalCommandArgsException("Illegal Number of args");
 
-        String figi = args.get(0);
-        if(!companies.isContainsFigi(figi)) throw new IllegalCommandArgsException("Illegal Number of args");
+        if(!companies.isContainsFigi(argument)) throw new IllegalCommandArgsException("Illegal Number of args");
 
         try {
-            companies.getByFigi(figi).startTrade(stream);
+            companies.getByFigi(argument).startTrade(stream);
             stream.updateSubscription();
         } catch (CompanyNotFoundException e) {
             e.printStackTrace();
         }
+        return true;
     }
 }
