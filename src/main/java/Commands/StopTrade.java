@@ -3,12 +3,11 @@ package Commands;
 import Connection.CandleStream;
 import Data.CompanyCollection;
 import Exceptions.CommandException;
-import Exceptions.CompanyNotFoundException;
 import Exceptions.IllegalCommandArgsException;
 
 public class StopTrade implements Command{
-    CompanyCollection companies;
-    CandleStream stream;
+    private CompanyCollection companies;
+    private CandleStream stream;
 
     public StopTrade(CompanyCollection companies, CandleStream stream){
         this.companies = companies;
@@ -22,12 +21,7 @@ public class StopTrade implements Command{
 
         String figi = args.get(0);
         if(companies.isContainsFigi(figi)) {
-            try {
-                companies.getByFigi(figi).tradeOff(stream);
-                stream.updateSubscription();
-            } catch (CompanyNotFoundException e) {
-                e.printStackTrace();
-            }
+            companies.stopTradingByFigi(figi, stream);
         }
     }
 }

@@ -6,8 +6,8 @@ import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
 public class StopAll implements Command{
-    CompanyCollection companies;
-    CandleStream stream;
+    private CompanyCollection companies;
+    private CandleStream stream;
 
     public StopAll(CompanyCollection companies, CandleStream stream){
         this.companies = companies;

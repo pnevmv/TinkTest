@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Supplier;
-//pizda
+
 public class ConsoleCommandArgSource implements CommandArgsSource {
     Scanner in;
     HashMap<CommandType, Supplier<List<String>>> commandArgsMap;
@@ -17,12 +17,13 @@ public class ConsoleCommandArgSource implements CommandArgsSource {
     {
         commandArgsMap = new HashMap<>();
     }
+
     public ConsoleCommandArgSource(Scanner in){
         this.in = in;
         commandArgsMap.put(CommandType.ADD, this::AddArgs);
-        commandArgsMap.put(Commands.CommandType.DELETE, this::DeleteArgs);
-        commandArgsMap.put(Commands.CommandType.START, this::StartArgs);
-        commandArgsMap.put(Commands.CommandType.STOP, this::StopArgs);
+        commandArgsMap.put(CommandType.DELETE, this::DeleteArgs);
+        commandArgsMap.put(CommandType.START, this::StartArgs);
+        commandArgsMap.put(CommandType.STOP, this::StopArgs);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class ConsoleCommandArgSource implements CommandArgsSource {
         res.add(in.nextLine().trim());
         System.out.println("Input percent of loss you can loose in one deal (integer)");
         res.add(in.nextLine().trim());
-        System.out.println("Input percent of takeprofit - starting from wich percent bot can sell share (integer)");
+        System.out.println("Input percent of take-profit - starting from which percent bot can sell share (integer)");
         res.add(in.nextLine().trim());
 
         return res;

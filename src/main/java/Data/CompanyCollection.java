@@ -40,7 +40,7 @@ public class CompanyCollection {
     }
 
     public Company getByFigi(String figi) throws CompanyNotFoundException {
-        if (!companies.containsKey(figi)) throw new CompanyNotFoundException();
+        if (!companies.containsKey(figi)) throw new CompanyNotFoundException("There's no company with figi: " + figi);
         return companies.get(figi);
     }
 
@@ -62,9 +62,8 @@ public class CompanyCollection {
             if (company.getIsTrading()) figis.add(company.getFigi());
         }
         try {
-            if (figis.isEmpty()) throw new CompanyNotFoundException();
+            if (figis.isEmpty()) throw new CompanyNotFoundException("There's no companies");
         } catch (CompanyNotFoundException exception) {
-            log.info("peace-da");
         }
         return figis;
     }

@@ -38,7 +38,6 @@ public class Index {
     }
 
     public void updateHistory(Candle candle) {
-
         if(candleHistory.size() > 0) this.candleHistory.removeFirst();
         HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
                 .setClose(candle.getClose())

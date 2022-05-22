@@ -1,4 +1,7 @@
 package Exceptions;
 
-public class CompanyNotFoundException extends Exception{
+public class CompanyNotFoundException extends CommandException {
+    public CompanyNotFoundException(String message) {
+        super(message);
+    }
 }
