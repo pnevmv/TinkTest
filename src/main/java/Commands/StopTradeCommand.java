@@ -7,8 +7,8 @@ import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
 public class StopTradeCommand extends AbstractCommand {
-    private CompanyCollection companies;
-    private CandleStream stream;
+    private final CompanyCollection companies;
+    private final CandleStream stream;
 
     public StopTradeCommand(CompanyCollection companies, CandleStream stream) {
         super("stop-trade {figi}", "Stop trading for company by figi");

@@ -3,7 +3,6 @@ package Commands;
 import Connection.CandleStream;
 import Data.CompanyCollection;
 import Exceptions.CommandException;
-import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
 public class DeleteCommand  extends AbstractCommand {

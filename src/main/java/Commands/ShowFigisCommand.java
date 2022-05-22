@@ -5,7 +5,7 @@ import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
 public class ShowFigisCommand extends AbstractCommand {
-    CompanyCollection companyCollection;
+    private CompanyCollection companyCollection;
 
     public ShowFigisCommand(CompanyCollection companyCollection) {
         super("show-figis", "display figi of each company");

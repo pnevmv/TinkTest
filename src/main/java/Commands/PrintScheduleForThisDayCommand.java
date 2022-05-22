@@ -6,7 +6,7 @@ import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
 public class PrintScheduleForThisDayCommand extends AbstractCommand {
-    private Connector connector;
+    private final Connector connector;
 
     public PrintScheduleForThisDayCommand(Connector connector) {
         super("print-schedule-today", "Display schedule for this day");
