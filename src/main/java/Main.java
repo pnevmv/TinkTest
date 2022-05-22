@@ -57,7 +57,7 @@ public class Main {
 
         while (true) {
             try {
-                Console.println("Введите Ваш токен:");
+                Console.println("Input your token:");
                 Console.print("> ");
                 token = userScanner.nextLine().trim();
                 if (token.isEmpty()) throw new IllegalArgumentException();

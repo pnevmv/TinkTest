@@ -25,7 +25,7 @@ public class Index {
         return value;
     }
 
-    public int getcandleStepsBack() {
+    public int getCandleStepsBack() {
         return candleStepsBack;
     }
 
@@ -76,7 +76,7 @@ public class Index {
     public void printHistory(){
         System.out.println("History:");
         for(HistoricCandle h : candleHistory){
-            System.out.println(h.getTime().getSeconds()); //todo: norm vivod
+            System.out.println(h.getTime().getSeconds()); //todo: norm output
         }
     }
 }

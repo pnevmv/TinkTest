@@ -18,7 +18,7 @@ public class CompanyBuilder {
 
         while (true) {
             try {
-                Console.println("¬ведите новое значение суммы, которой разрешено распор€жатьс€:");
+                Console.println("Input new value of money that you want to trade:");
                 Console.print("> ");
                 String stringValue = userScanner.nextLine().trim();
                 value = new BigDecimal(stringValue);
@@ -38,7 +38,7 @@ public class CompanyBuilder {
 
         while (true) {
             try {
-                Console.println("¬ведите допустимый процент потерь от 0 до 100:");
+                Console.println("Input loss-percent from 0 to 100:");
                 Console.print("> ");
                 String stringValue = userScanner.nextLine().trim();
                 loss = Double.parseDouble(stringValue);
@@ -58,7 +58,7 @@ public class CompanyBuilder {
 
         while (true) {
             try {
-                Console.println("¬ведите take-profit:");
+                Console.println("Input take-profit:");
                 Console.print("> ");
                 String stringValue = userScanner.nextLine().trim();
                 takeProfit = Double.parseDouble(stringValue);
@@ -78,7 +78,7 @@ public class CompanyBuilder {
 
         while (true) {
             try {
-                Console.println("¬ведите новое значение суммы, которой разрешено распор€жатьс€:");
+                Console.println("Input value of money-to-trade:");
                 Console.print("> ");
                 String stringValue = userScanner.nextLine().trim();
                 value = Double.parseDouble(stringValue);
