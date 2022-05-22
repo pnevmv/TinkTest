@@ -1,6 +1,5 @@
 package Proccesor;
 
-import java.lang.Math;
 import java.math.BigDecimal;
 import Connection.Connector;
 import Connection.TradeStream;
@@ -9,15 +8,12 @@ import Data.CompanyCollection;
 import Data.Deal;
 import Exceptions.NotEnoughMoneyToTradeException;
 import ru.tinkoff.piapi.contract.v1.Candle;
-import ru.tinkoff.piapi.contract.v1.OrderDirection;
-import ru.tinkoff.piapi.contract.v1.OrderType;
 import ru.tinkoff.piapi.core.InvestApi;
-
-import java.util.List;
 
 /**
  * Class that calculate from probability, how many stock it can buy/sell and call TradeStream methods for buying/selling
  * if user hasn't got enough money/stocks for trading, trader will give a signal
+ *
  *
  */
 
@@ -37,48 +33,92 @@ public class Trader {
         System.out.println("--GOING TO TRADE--");
         System.out.println(probability);
 
+        if(probability > 0) {
+            //todo: нормально прокинуть exception
+            try {
+                buyLots(probability, candle, company);
+            } catch (NotEnoughMoneyToTradeException e) {
+                e.printStackTrace();
+            }
+        }
+        if(probability < 0) sellLots((-1) * probability, candle, company);
+
 
     }
 
+
+
+
     public void sellIfStopPrice(Company company, Candle candle){
-        double close = MoneyQuotationProcessor.convertFromQuation(candle.getClose()).doubleValue();
+        BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
         for( Deal d  : company.getOpenDeals().getDealsAsList()){
-            if(d.getPrice() <= close){
-                tradeStream.sellStock((d.getShareNumber() / company.getLot()), candle.getClose(), company.getFigi());
+            //если текущая цена ниже стоп-цены, то продаем все лоты
+            if(d.getStopPrice().compareTo(close) >= 0){
+                tradeStream.sellStock((d.getLotNumber()), candle.getClose(), company.getFigi(), d);
             }
         }
     }
 
 
-   public int calculateLotsToBuy(double probability, Candle candle, Company company) throws NotEnoughMoneyToTradeException {
+   public void buyLots(double probability, Candle candle, Company company) throws NotEnoughMoneyToTradeException {
         //todo: учесть стоплос
         int lots = 0;
 
        BigDecimal closePrice = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
+       // цена лота = цена закрытия * лотность инструмента
        BigDecimal lotPrice = closePrice.multiply(new BigDecimal(company.getLot()));
+
        BigDecimal freeMoney = new BigDecimal(company.getFreeMoney());
        BigDecimal probab = new BigDecimal(probability);
-       lots = freeMoney.divide(lotPrice).multiply(probab).intValue();
-       if(lots == 0) throw new NotEnoughMoneyToTradeException();
-       return lots;
+
+       //если хватает только на 1 лот и вероятность больше 60, взять 1 лот
+       if(freeMoney.divide(lotPrice).intValue() == 1 && probability > 0.6) lots =  1;
+       /*Доступные деньги / цена лота = доступное количество лотов, умножением на вероятность получаем
+       количество лотов пропорциональное вероятности.
+       Т.е. при вероятности 50% бот купит инструментов на 50% от количества доступных денег
+       (с поправкой на лотность, округление идет в сторону меньшего количества лотов
+        */
+       else lots = freeMoney.divide(lotPrice).multiply(probab).intValue();
+
+       /*если невозможно купить ни одного лота, и до этого не было куплено ни одного лота, то пердупредить пользователя
+       о невозмоности торговли
+        */
+       if(lots == 0 && company.getOpenDeals().getDealsAsList().isEmpty()) throw new NotEnoughMoneyToTradeException();
+
+       //запрос на покупку
+       if(lots > 0) tradeStream.buyStock(
+               lots,
+               candle.getClose(),
+               company.getFigi()
+       );
+
    }
 
 
-    public int calculateLotsToSell(double probability, Candle candle, Company company) {
-        double close = MoneyQuotationProcessor.convertFromQuation(candle.getClose()).doubleValue();
-        double  companyTakeprofit = company.getTakeProfit() / 100;
-        int lots = 0;
-        //todo: учесть тейкпрофит
-        for(Deal d : company.getOpenDeals().getDealsAsList()){
-            if( (d.getPrice() * (1 + companyTakeprofit) > close)){
-                lots +=  1;
+    public void sellLots(double probability, Candle candle, Company company) {
+        BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
+        // множитель для пересчета цены тейкпрофита
+        BigDecimal  companyTakeprofit = new BigDecimal(1 + (company.getTakeProfit() / 100));
 
+
+        for(Deal d : company.getOpenDeals().getDealsAsList()){
+            //если инстумент превысил свой тейкпрофит
+            if( (d.getPrice().multiply(companyTakeprofit)).compareTo(close) <= 0){
+                /*
+                 в случае доступности 1 лота продаем целиком, иначе долю высчитываемую через вероятность
+                 (берется целая часть, округление в меньшую сторону
+                 */
+                if(d.getLotNumber() == 1)  tradeStream.sellStock(1, candle.getClose(), company.getFigi(), d);
+                if (d.getLotNumber() > 1){
+                    tradeStream.sellStock(
+                            (long)(d.getLotNumber() * probability), //todo:нормальное взятие целой части
+                            candle.getClose(),
+                            company.getFigi(),
+                            d
+                    );
+                }
             }
         }
-
-        return lots;
     }
 
-  // private boolean checkIfCanBuy(){return false;}
-  //  private boolean checkIfCanSell(){return false;}
 }

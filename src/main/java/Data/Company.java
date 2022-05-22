@@ -3,6 +3,7 @@ package Data;
 import Connection.*;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class Company {
@@ -108,15 +109,18 @@ public class Company {
      * @param lotNumber
      * @param price - price of whole deal (lot*price*lotNumber)
      */
-    public void buyShares(int lotNumber, double price, int id) {
-        double stopPrice = price - price * (lossPercent / 100); //TODO: calculating StopPrice
-        this.freeMoney -= price;
+    public void buyShares(long lotNumber, BigDecimal price, String id) {
+        BigDecimal lossCoef = new BigDecimal(1 - lossPercent / 100);
+
+        BigDecimal stopPrice = (price.multiply(lossCoef));
+        this.freeMoney -= (price.multiply(BigDecimal.valueOf(lotNumber))).doubleValue();
+
         getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice, id));
     }
 
-    public void sellShares (Deal deal, int lotNumber, double price, int id) {
+    public void sellShares (Deal deal, long lotNumber, BigDecimal price, String id) {
         getOpenDeals().deletePartly(deal, lotNumber);
-        this.freeMoney += price;
+        this.freeMoney += (price.multiply(BigDecimal.valueOf(lotNumber))).doubleValue();
     }
 
 

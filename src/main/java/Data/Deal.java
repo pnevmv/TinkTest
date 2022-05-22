@@ -1,31 +1,32 @@
 package Data;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class Deal {
-    private final int id;
-    private final int shareNumber;
-    private final double price;
+    private final String id;
+    private final long lotNumber;
+    private final BigDecimal price;
     private final Date date;
-    private final double stopPrice;
+    private final BigDecimal stopPrice;
 
-    public Deal(int shareNumber, double price, double stopPrice, int id) {
+    public Deal(long lotNumber, BigDecimal price, BigDecimal stopPrice, String id) {
         this.id = id;
-        this.shareNumber = shareNumber;
+        this.lotNumber = lotNumber;
         this.price = price;
         this.date = new Date(System.currentTimeMillis());
         this.stopPrice = stopPrice;
     }
 
-    public int getShareNumber() {
-        return this.shareNumber;
+    public long getLotNumber() {
+        return this.lotNumber;
     }
 
-    public double getPrice() {
+    public BigDecimal getPrice() {
         return this.price;
     }
 
-    public double getStopPrice() {
+    public BigDecimal getStopPrice() {
         return this.stopPrice;
     }
 
@@ -33,12 +34,12 @@ public class Deal {
         return this.date;
     }
 
-    public int getId(){return this.id;}
+    public String getId(){return this.id;}
     @Override
     public String toString() {
         return "Сделка стоимостью: " + this.getPrice()
                 + "\nЦена экстренной продажи:" + this.getStopPrice()
-                + "\nКол-во приобретенных акций:" + this.getShareNumber()
+                + "\nКол-во приобретенных акций:" + this.getLotNumber()
                 + "\nДата сделки: " + this.getDate();
     }
 }
