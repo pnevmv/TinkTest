@@ -5,6 +5,8 @@ import Data.Company;
 import Data.CompanyBuilder;
 import Data.CompanyCollection;
 import Exceptions.CommandException;
+import Exceptions.CompanyNotFoundException;
+import Exceptions.ExchangeUnavailableException;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
@@ -29,12 +31,15 @@ public class AddCompanyCommand extends AbstractCommand{
     public boolean execute(String argument) throws CommandException {
         try {
             if (argument.isEmpty()) throw new IllegalCommandArgsException("The command was entered in the wrong format!");
+            if (connector.isAvailableNow(companyBuilder.askNameOfExchange())) throw new ExchangeUnavailableException("Exchange unavailable now, check the schedule");
+            if (connector.isExistByFigi(argument)) throw new CompanyNotFoundException("No shares with this figi were found");
             double lossPercent = companyBuilder.askLossPercent();
-            double takeProfit = companyBuilder.askTakeProfit();double moneyToTrade = companyBuilder.askMoneyToTrade();
+            double takeProfit = companyBuilder.askTakeProfit();
+            double moneyToTrade = companyBuilder.askMoneyToTrade();
             if (BigDecimal.valueOf(moneyToTrade).compareTo(connector.getAmountOfMoney()) > 0) throw new IllegalCommandArgsException("Wrong value of money");
             Company company = new Company(argument, moneyToTrade, lossPercent, takeProfit, 2);
             companyCollection.putCompanyByFigi(argument, company);
-        } catch (IllegalCommandArgsException exception) {
+        } catch (IllegalCommandArgsException | ExchangeUnavailableException exception) {
             Console.printError(exception.getMessage());
         }
 

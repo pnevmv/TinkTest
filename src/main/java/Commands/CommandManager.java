@@ -12,7 +12,7 @@ public class CommandManager {
 
     public CommandManager(Command... commandsInput) {
         for (Command command : commandsInput) {
-            commands.put(command.getName(), command);
+            commands.put(command.getName().split(" ", 0)[0], command);
         }
     }
 

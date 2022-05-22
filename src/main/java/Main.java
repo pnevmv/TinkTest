@@ -21,7 +21,6 @@ public class Main {
         try (Scanner userScanner = new Scanner(System.in)) {
 
             String token = initializeToken(userScanner);
-
             InvestApi api = InvestApi.create(token, appName);
 
             CompanyCollection companyCollection = new CompanyCollection();
@@ -52,6 +51,7 @@ public class Main {
             Console.printError(exception.getMessage());
         } catch (ApiRuntimeException exception) {
             Console.printError("Can't create API with this token, reboot app");
+            exception.printStackTrace();
         }
     }
 

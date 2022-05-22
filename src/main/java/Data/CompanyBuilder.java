@@ -92,4 +92,23 @@ public class CompanyBuilder {
 
         return value;
     }
+
+    public String askNameOfExchange() {
+        String name;
+
+        while (true) {
+            try {
+                Console.println("Input value name of exchange:");
+                Console.print("> ");
+                name = userScanner.nextLine().trim();
+
+                if (name.isEmpty()) throw new IllegalCommandArgsException();
+                break;
+            } catch (IllegalCommandArgsException exception) {
+                Console.printError("Invalid name (example: moex, spb)");
+            }
+        }
+
+        return name;
+    }
 }

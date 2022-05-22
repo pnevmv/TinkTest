@@ -73,14 +73,14 @@ public class Connector{
         var today = tradingSchedules.getDays(0);
         var now = System.currentTimeMillis() / 1000;
 
-        return today.getIsTradingDay()
-                && now >= today.getStartTime().getSeconds()
-                && now < today.getEndTime().getSeconds();
+        return !today.getIsTradingDay()
+                || now < today.getStartTime().getSeconds()
+                || now >= today.getEndTime().getSeconds();
     }
 
     public void printScheduleForThisDay(String name) {
         var tradingSchedules =
-                api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
+                api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(6, ChronoUnit.DAYS));
 
         var today = tradingSchedules.getDays(0);
         if (today.getIsTradingDay()) {
@@ -135,7 +135,7 @@ public class Connector{
     public boolean isExistByFigi(String figi) {
         Share share;
         share = api.getInstrumentsService().getShareByFigiSync(figi);
-        return share.isInitialized();
+        return !share.isInitialized();
     }
 }
 
