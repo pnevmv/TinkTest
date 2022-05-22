@@ -9,15 +9,15 @@ public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private final Connector connector;
 
     public PrintScheduleForThisDayCommand(Connector connector) {
-        super("print-schedule-today", "Display schedule for this day");
+        super("print-schedule-today {name of exchange}", "Display schedule of exchange for this day (example: moex, spb)");
         this.connector = connector;
     }
 
     @Override
     public boolean execute(String argument) throws CommandException {
         try {
-            if (!argument.isEmpty()) throw new IllegalCommandArgsException();
-            connector.printScheduleForThisDay();
+            if (argument.isEmpty()) throw new IllegalCommandArgsException();
+            connector.printScheduleForThisDay(argument);
         } catch (IllegalCommandArgsException exception) {
             Console.printError("The command was entered in the wrong format!");
         }

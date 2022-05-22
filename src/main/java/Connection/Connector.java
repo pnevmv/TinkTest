@@ -66,9 +66,9 @@ public class Connector{
         return new Date(timestamp.getSeconds() * 1000);
     }
 
-    public boolean isAvailableNow() {
+    public boolean isAvailableNow(String name) {
         var tradingSchedules =
-                api.getInstrumentsService().getTradingScheduleSync("moex", Instant.now(), Instant.now().plus(1, ChronoUnit.DAYS));
+                api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(1, ChronoUnit.DAYS));
 
         var today = tradingSchedules.getDays(0);
         var now = System.currentTimeMillis() / 1000;
@@ -78,23 +78,23 @@ public class Connector{
                 && now < today.getEndTime().getSeconds();
     }
 
-    public void printScheduleForThisDay() {
+    public void printScheduleForThisDay(String name) {
         var tradingSchedules =
-                api.getInstrumentsService().getTradingScheduleSync("moex", Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
+                api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
 
         var today = tradingSchedules.getDays(0);
         if (today.getIsTradingDay()) {
             String startTime = new SimpleDateFormat("HH.mm.ss").format(timestampToDate(today.getStartTime()));
             String endTime = new SimpleDateFormat("HH.mm.ss").format(timestampToDate(today.getEndTime()));
 
-            System.out.println("Расписание работы на сегодня:\nОткрытие: " + startTime + "\nЗакрытие: " + endTime);
+            System.out.println("Schedule for today (" + name + "):\nOpening: " + startTime + "\nClosing: " + endTime);
         }
-        else System.out.println("Сегодня биржа не работает");
+        else System.out.println("The exchange is closed today");
     }
 
-    public void printSchedule() {
+    public void printSchedule(String name) {
         var tradingSchedules =
-                api.getInstrumentsService().getTradingScheduleSync("moex", Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
+                api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
 
         for (TradingDay tradingDay : tradingSchedules.getDaysList()) {
             String date = new SimpleDateFormat("yyyy.MM.dd").format(timestampToDate(tradingDay.getDate()));
@@ -102,9 +102,9 @@ public class Connector{
             String endTime = new SimpleDateFormat("HH.mm.ss").format(timestampToDate(tradingDay.getEndTime()));
 
             if (tradingDay.getIsTradingDay()) {
-                System.out.printf("Расписание торгов для площадки MOEX. Дата: {%s},  открытие: {%s}, закрытие: {%s}\n", date, startTime, endTime);
+                System.out.printf("Schedule of working for" + name + ". Date: {%s},  opening: {%s}, closing: {%s}\n", date, startTime, endTime);
             } else {
-                System.out.printf("Расписание торгов для площадки MOEX. Дата: {%s}. Выходной день\n", date);
+                System.out.printf("Schedule of working for MOEX. Date: {%s}. Day off\n", date);
             }
 
         }
@@ -123,7 +123,7 @@ public class Connector{
         try {
             if (id == null) throw new AccountNotFoundException();
         } catch (AccountNotFoundException e) {
-            System.out.println("Аккаунт не найден");
+            System.out.println("Account cannot found");
         }
         return id;
     }
