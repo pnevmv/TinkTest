@@ -10,7 +10,6 @@ import ru.tinkoff.piapi.contract.v1.Quotation;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,13 +28,12 @@ public final class RSICalculator implements IndexCalculator {
     public double calculateIndex(Company company, Candle candle) {
         BigDecimal positive = BigDecimal.ZERO;
         BigDecimal negative = BigDecimal.ZERO;
-        MoneyQuotationProcessor moneyProc = new MoneyQuotationProcessor();
-        BigDecimal curCandleCLose = moneyProc.convertFromQuation(candle.getClose());
+        BigDecimal curCandleCLose = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
         List<BigDecimal> historyInNum = new ArrayList<>();
 
         // translate History List to BigDecimal  List of Close prices
         for(HistoricCandle c : company.getIndexByType(IndexType.RSI).getHistoryAsList()){
-            historyInNum.add(moneyProc.convertFromQuation(c.getClose()));
+            historyInNum.add(MoneyQuotationProcessor.convertFromQuation(c.getClose()));
 
         }
 
@@ -84,6 +82,8 @@ public final class RSICalculator implements IndexCalculator {
                 )
         );
     }
+
+
 
     //Tests RSI Calc on hand inputted sample of close prices
     public void testRSICalc(List<Long> closes) {

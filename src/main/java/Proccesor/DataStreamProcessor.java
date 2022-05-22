@@ -4,6 +4,7 @@ import Data.Company;
 import Data.CompanyCollection;
 import Exceptions.CompanyNotFoundException;
 import Data.IndexType;
+import Exceptions.NotEnoughMoneyToTradeException;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 
@@ -23,6 +24,7 @@ public class DataStreamProcessor {
     Candle curCandle;
     Company curCandleCompany;
     IndexCalculators i;
+
     public DataStreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
@@ -41,8 +43,8 @@ public class DataStreamProcessor {
                 try {
                     curCandleCompany = companies.getByFigi(curCandle.getFigi()); //get company of candle
 
-                    if (checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse))//Check if candle is on new timestap for some index. Different indexes has different timeframes
-                    {
+                    //Check if candle is on new timestap for some index. Different indexes has different timeframes
+                    if (checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse, curCandleCompany)) {
                         System.out.println(curCandle);
                         curCandleCompany.getIndexByType(IndexType.RSI).printHistory();
 
@@ -56,27 +58,38 @@ public class DataStreamProcessor {
                                 Solver.solution(curCandleCompany)); //solver calculates probability to buy/sell based on indexes
 
                     }
+
+                    //экстренная продажа если достигнут стоплосс
                     trader.sellIfStopPrice(curCandleCompany, curCandle);
-                } catch (CompanyNotFoundException e) {
+
+                } catch (CompanyNotFoundException | NotEnoughMoneyToTradeException e) {
                     e.printStackTrace();
                 }
             }
 
     }
 
+    /*
+    todo: обработать ситуацию, когда у человека меньше денег чем на один лот. Добавить в качестве поля
+      вывод в консоль(или лучше экземпляр юзер интерфейса) и коннектор, чтобы удалять и стопить подписки если с ними че то стало не так
+     */
+
     /**
      * Check if new candle older that previous on the index timestap
      */
-    private boolean checkIfNewCandleForIndex(IndexType type, MarketDataResponse marketDataResponse){
-        try {
-            return companies.getByFigi(
-                    marketDataResponse.getCandle().getFigi()).getIndexByType(IndexType.RSI)
-                    .getTimeOfLastEl() != marketDataResponse.getCandle().getTime().getSeconds();
-        } catch (CompanyNotFoundException e) {
-            e.printStackTrace();
+    private boolean checkIfNewCandleForIndex(IndexType type, MarketDataResponse marketDataResponse, Company company){
+
+        switch(type){
+            case RSI:
+                return company.getIndexByType(IndexType.RSI)
+                        .getTimeOfLastEl() != marketDataResponse.getCandle().getTime().getSeconds();
+            case NVI:
+            case PVI:
+                return false; //todo: проверка, что инфа за новый день пришла
+            default:
+                return false;
         }
-        return false;
     }
 }
 
-//todo: обработать ситуацию, когда у человека меньше денег чем на один лот
+

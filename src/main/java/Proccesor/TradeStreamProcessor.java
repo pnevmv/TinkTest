@@ -19,6 +19,11 @@ public class TradeStreamProcessor {
     }
 
 
+    /*
+  todo: обработать ситуации, когда есть косяки с инфой с бирже и историей сделок. Добавить в качестве поля
+    вывод в консоль(или лучше экземпляр юзер интерфейса) и коннектор, чтобы удалять и стопить подписки если с ними че то стало не так
+   */
+
     public void responseProcess(TradesStreamResponse tradesStreamResponse) {
         if(tradesStreamResponse.hasOrderTrades()){
             try {

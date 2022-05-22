@@ -17,19 +17,20 @@ import java.util.function.Consumer;
 
 
 public class CandleStream implements CandleSource{
-    private CompanyCollection companies;
-    private MarketDataStreamService marketStreamServ;
-    private MarketDataService marketServ;
+    private final CompanyCollection companies;
+    private final MarketDataStreamService marketStreamServ;
+    private final MarketDataService marketServ;
     private MarketDataSubscriptionService stream;
-    private InvestApi api;
+    private final InvestApi api;
 
     private int connectionAttempts;
 
     { connectionAttempts = 0; }
     public CandleStream(InvestApi api, CompanyCollection companies){
-        marketStreamServ = api.getMarketDataStreamService();
-        this.companies = companies;
         this.api = api;
+        this.marketStreamServ = api.getMarketDataStreamService();
+        this.marketServ = api.getMarketDataService();
+        this.companies = companies;
     }
 
     public void initialize(DataStreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
@@ -38,12 +39,7 @@ public class CandleStream implements CandleSource{
         if (!companies.getFigisOfTradingCompanies().isEmpty()) stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
     }
 
-    public void reconnect() throws OutNumberOfReconnectAttemptsException {
-    }
 
-    public void checkConnection(){
-
-    }
     public void updateSubscription() {
         if(!companies.getFigisOfTradingCompanies().isEmpty()) {
             System.out.println(companies.getFigisOfTradingCompanies().get(0));
@@ -53,15 +49,25 @@ public class CandleStream implements CandleSource{
 
     @Override
     public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack) {
-        Queue <HistoricCandle> q = new LinkedList<>();
-        for (HistoricCandle histCandle : api.getMarketDataService().getCandlesSync(figi,
-                Instant.now().minusSeconds(60 * candleStepsBack),
+        return new LinkedList<>(api.getMarketDataService().getCandlesSync(figi,
+                Instant.now().minusSeconds((long) secondsInCandleInterval(candleInterval) * candleStepsBack),
                 Instant.now(),
-                candleInterval)) {
-            q.add(histCandle);
-        }
-        return q;
-    }//todo: ??????????
+                candleInterval));
+    }
 
+    private int secondsInCandleInterval(CandleInterval candleInterval){
+        switch(candleInterval){
+            case CANDLE_INTERVAL_DAY:
+                return 60 * 60 * 24;
+            case CANDLE_INTERVAL_HOUR:
+                return 60 * 60;
+            case CANDLE_INTERVAL_5_MIN:
+                return 60 * 5;
+            case CANDLE_INTERVAL_15_MIN:
+                return 60 * 15;
+            default:
+                return 60;
+        }
+    }
 
 }

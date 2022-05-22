@@ -1,6 +1,8 @@
 package Proccesor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import Connection.Connector;
 import Connection.TradeStream;
 import Data.Company;
@@ -18,10 +20,9 @@ import ru.tinkoff.piapi.core.InvestApi;
  */
 
 public class Trader {
-    private Connector connector;
-    private TradeStream tradeStream;
-    private CompanyCollection companies;
-    private InvestApi api;
+    private final TradeStream tradeStream;
+    private final CompanyCollection companies;
+    private final InvestApi api;
 
     public Trader(Connector connector, InvestApi api){
         this.tradeStream = connector.getTradeStream();
@@ -29,18 +30,14 @@ public class Trader {
         this.companies = connector.getCompanies();
     }
 
-    public void trade(Company company, Candle candle, double probability) {
+    //todo: учесть комиссию
+
+    public void trade(Company company, Candle candle, double probability) throws NotEnoughMoneyToTradeException {
         System.out.println("--GOING TO TRADE--");
         System.out.println(probability);
 
-        if(probability > 0) {
-            //todo: нормально прокинуть exception
-            try {
-                buyLots(probability, candle, company);
-            } catch (NotEnoughMoneyToTradeException e) {
-                e.printStackTrace();
-            }
-        }
+        if(probability > 0) buyLots(probability, candle, company);
+
         if(probability < 0) sellLots((-1) * probability, candle, company);
 
 
@@ -61,24 +58,23 @@ public class Trader {
 
 
    public void buyLots(double probability, Candle candle, Company company) throws NotEnoughMoneyToTradeException {
-        //todo: учесть стоплос
-        int lots = 0;
+        long lots;
 
        BigDecimal closePrice = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
        // цена лота = цена закрытия * лотность инструмента
-       BigDecimal lotPrice = closePrice.multiply(new BigDecimal(company.getLot()));
+       BigDecimal lotPrice = closePrice.multiply(BigDecimal.valueOf(company.getLot()));
 
-       BigDecimal freeMoney = new BigDecimal(company.getFreeMoney());
-       BigDecimal probab = new BigDecimal(probability);
+       BigDecimal freeMoney =  BigDecimal.valueOf(company.getFreeMoney());
+       BigDecimal probab = BigDecimal.valueOf(probability);
 
        //если хватает только на 1 лот и вероятность больше 60, взять 1 лот
-       if(freeMoney.divide(lotPrice).intValue() == 1 && probability > 0.6) lots =  1;
+       if(freeMoney.divide(lotPrice, 9, RoundingMode.HALF_DOWN).intValue() == 1 && probability > 0.6) lots =  1;
        /*Доступные деньги / цена лота = доступное количество лотов, умножением на вероятность получаем
        количество лотов пропорциональное вероятности.
        Т.е. при вероятности 50% бот купит инструментов на 50% от количества доступных денег
        (с поправкой на лотность, округление идет в сторону меньшего количества лотов
         */
-       else lots = freeMoney.divide(lotPrice).multiply(probab).intValue();
+       else lots = freeMoney.divide(lotPrice, 9, RoundingMode.HALF_DOWN).multiply(probab).intValue();
 
        /*если невозможно купить ни одного лота, и до этого не было куплено ни одного лота, то пердупредить пользователя
        о невозмоности торговли
@@ -98,7 +94,7 @@ public class Trader {
     public void sellLots(double probability, Candle candle, Company company) {
         BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
         // множитель для пересчета цены тейкпрофита
-        BigDecimal  companyTakeprofit = new BigDecimal(1 + (company.getTakeProfit() / 100));
+        BigDecimal  companyTakeprofit = BigDecimal.valueOf(1 + (company.getTakeProfit() / 100));
 
 
         for(Deal d : company.getOpenDeals().getDealsAsList()){

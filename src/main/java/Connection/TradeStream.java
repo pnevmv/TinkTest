@@ -2,8 +2,6 @@ package Connection;
 
 import Data.CompanyCollection;
 import Data.Deal;
-import Exceptions.CompanyNotFoundException;
-import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.TradeStreamProcessor;
 import ru.tinkoff.piapi.contract.v1.OrderDirection;
 import ru.tinkoff.piapi.contract.v1.OrderType;
@@ -17,15 +15,12 @@ import java.util.function.Consumer;
 
 
 public class TradeStream {
-    private InvestApi api;
-    private CompanyCollection companies;
-    private OrdersStreamService orderStreamService;
-    private OrdersService tradeServ;
+    private final InvestApi api;
+    private final CompanyCollection companies;
+    private final OrdersStreamService orderStreamService;
+    private final OrdersService tradeServ;
     private long orderId;
 
-    {
-        orderId = 0;
-    }
     public TradeStream(InvestApi api, CompanyCollection companies) {
         this.api = api;
         orderStreamService = api.getOrdersStreamService();
@@ -34,15 +29,15 @@ public class TradeStream {
     }
 
     public void initialize(TradeStreamProcessor processor) {
-        Consumer<Throwable> streamError = e -> {System.out.println(e.toString()); }; //todo: logger, correct reconnection
+        Consumer<Throwable> streamError = e -> System.out.println(e.toString()); //todo: logger, correct reconnection
         orderStreamService.subscribeTrades(processor::responseProcess
                 , streamError
                 , List.of(api.getUserService().getAccountsSync().get(0).getId()));
         //todo: сделать нормальное получение акаауннтов
     }
 
-    public boolean buyStock(long lots, Quotation price, String figi){
-        tradeServ.postOrderSync(
+    public void buyStock(long lots, Quotation price, String figi){
+        tradeServ.postOrder(
                 figi,
                 lots,
                 price,
@@ -52,10 +47,9 @@ public class TradeStream {
                 String.valueOf(orderId)
         ); //todo: сделать нормальное получение акаауннтов
         orderId++;
-        return true;
     }
-    public boolean sellStock(long lots, Quotation price, String figi, Deal deal){
-        tradeServ.postOrderSync(
+    public void sellStock(long lots, Quotation price, String figi, Deal deal){
+        tradeServ.postOrder(
                 figi,
                 lots,
                 price,
@@ -64,8 +58,5 @@ public class TradeStream {
                 OrderType.ORDER_TYPE_MARKET,
                 String.valueOf(deal.getId())
         ); //todo: сделать нормальное получение акаауннтов
-        return false;
     }
-
-
 }
