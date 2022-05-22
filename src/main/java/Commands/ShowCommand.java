@@ -6,7 +6,7 @@ public class ShowCommand extends AbstractCommand {
     CompanyCollection companyCollection;
 
     public ShowCommand(CompanyCollection companyCollection) {
-        super("show", "display all companies");
+        super("show", "Display all companies");
         this.companyCollection = companyCollection;
     }
 

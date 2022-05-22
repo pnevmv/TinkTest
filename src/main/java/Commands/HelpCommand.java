@@ -5,7 +5,7 @@ import UI.Console.Console;
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand() {
-        super("help", "Display help for available commands");
+        super("help", "Display available commands");
     }
 
     /**

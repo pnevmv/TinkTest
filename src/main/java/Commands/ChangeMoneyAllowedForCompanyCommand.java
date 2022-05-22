@@ -7,7 +7,7 @@ package Commands;
 public class ChangeMoneyAllowedForCompanyCommand extends AbstractCommand{
 
     public ChangeMoneyAllowedForCompanyCommand() {
-        super("change-money {figi} {value}", "changes money allowed for company");
+        super("change-money {figi} {value}", "Change money allowed for company");
     }
 
     @Override

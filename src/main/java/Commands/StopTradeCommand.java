@@ -5,12 +5,12 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class StopTrade extends AbstractCommand {
+public class StopTradeCommand extends AbstractCommand {
     private CompanyCollection companies;
     private CandleStream stream;
 
-    public StopTrade(CompanyCollection companies, CandleStream stream) {
-        super("stop-trade {figi}", "stops trading for company by figi");
+    public StopTradeCommand(CompanyCollection companies, CandleStream stream) {
+        super("stop-trade {figi}", "Stop trading for company by figi");
         this.companies = companies;
         this.stream = stream;
     }

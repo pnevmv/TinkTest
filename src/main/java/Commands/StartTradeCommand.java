@@ -6,12 +6,12 @@ import Exceptions.CommandException;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.IllegalCommandArgsException;
 
-public class StartTrade extends AbstractCommand {
+public class StartTradeCommand extends AbstractCommand {
     private CompanyCollection companies;
     private CandleStream stream;
 
-    public StartTrade(CompanyCollection companies, CandleStream stream) {
-        super("star-trade {figi}", "starts trade company by figi");
+    public StartTradeCommand(CompanyCollection companies, CandleStream stream) {
+        super("star-trade {figi}", "Start trade company by figi");
         this.companies = companies;
         this.stream = stream;
     }

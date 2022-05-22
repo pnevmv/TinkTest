@@ -23,11 +23,11 @@ public class Console {
         int commandStatus;
         try {
             do {
-                Console.print(">");
+                Console.print("> ");
                 userCommand = (scanner.nextLine().trim() + " ").split(" ", 2);
                 userCommand[1] = userCommand[1].trim();
                 commandStatus = launchCommand(userCommand);
-            } while (commandStatus != 2);
+            } while (commandStatus != 1);
         } catch (NoSuchElementException exception) {
             Console.printError("No user input detected!");
         } catch (IllegalStateException exception) {
@@ -43,18 +43,18 @@ public class Console {
      */
 
     private int launchCommand(String[] userCommand) throws CommandException {
-        Set<Command> set = commandManager.getCommands();
+        HashMap<String, Command> commands = commandManager.getCommands();
 
+        if (userCommand[0].equals("exit")) return 1;
         if (userCommand[0].equals("help")) {
             commandManager.helpCommand(userCommand[1]);
-            return 1;
+            return 0;
         }
-
-        for (Command command: set) {
-            if (command.equals(userCommand[0])) command.execute(userCommand[0]);
+        if (!commands.containsKey(userCommand[0])) {
+            commandManager.noSuchCommand(userCommand[0]);
+            return 0;
         }
-
-        commandManager.noSuchCommand(userCommand[0]);
+        commands.get(userCommand[0]).execute(userCommand[1]);
         return 0;
     }
 

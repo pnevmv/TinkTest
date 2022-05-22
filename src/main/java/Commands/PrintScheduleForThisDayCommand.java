@@ -8,7 +8,7 @@ public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private Connector connector;
 
     public PrintScheduleForThisDayCommand(Connector connector) {
-        super("print-schedule-today", "prints schedule for this day");
+        super("print-schedule-today", "Display schedule for this day");
         this.connector = connector;
     }
 

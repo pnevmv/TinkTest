@@ -12,7 +12,7 @@ public class DeleteCommand  extends AbstractCommand {
     private final CandleStream stream;
 
     public DeleteCommand(CompanyCollection companies, CandleStream stream){
-        super("delete {figi}", "deletes company by figi");
+        super("delete {figi}", "Delete company by figi");
         this.companies = companies;
         this.stream = stream;
     }

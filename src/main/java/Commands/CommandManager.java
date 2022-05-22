@@ -2,6 +2,7 @@ package Commands;
 
 import UI.Console.Console;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -29,19 +30,17 @@ public class CommandManager {
      * @param argument It's argument.
      * @return Command exit status.
      */
-    public boolean helpCommand(String argument) {
+    public void helpCommand(String argument) {
         HelpCommand helpCommand = new HelpCommand();
         if (helpCommand.execute(argument)) {
             for (Command command: commands.values()) {
                 Console.printable(command.getName(), command.getDescription());
             }
-            return true;
         }
-        else return false;
     }
 
-    public Set<Command> getCommands() {
-        return (Set<Command>) this.commands.values();
+    public HashMap<String, Command> getCommands() {
+        return this.commands;
     }
 
     @Override

@@ -5,12 +5,12 @@ import Data.CompanyCollection;
 import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 
-public class StopAll extends AbstractCommand {
+public class StopAllCommand extends AbstractCommand {
     private CompanyCollection companies;
     private CandleStream stream;
 
-    public StopAll(String name, String description, CompanyCollection companies, CandleStream stream){
-        super("stop-all", "finishes all trade-processes");
+    public StopAllCommand(CompanyCollection companies, CandleStream stream){
+        super("stop-all", "Finish all trade-processes");
         this.companies = companies;
         this.stream = stream;
     }
