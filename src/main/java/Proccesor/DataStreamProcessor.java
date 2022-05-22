@@ -7,41 +7,56 @@ import Data.IndexType;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.MarketDataResponse;
 
+/**
+ * Class used for process responses from exchange. Used in CandleStream.
+ * CandleStream call method process on each response async.
+ * In case response is candle, and time from last candle for current company more than given time,
+ * Method processes calculate all indexes, Solver calculates probability to buy/sell, based on indexes
+ * and after all company with updated indexes and calculated probability will go to trader, that will
+ * buy/sell some amount of stocks
+ * Final pipeline: CandleStream -> IndexCalculators -> Solver -> Trader
+ */
 public class DataStreamProcessor {
     CompanyCollection companies;
     Trader trader;
 
     Candle curCandle;
     Company curCandleCompany;
-
+    IndexCalculators i;
     public DataStreamProcessor(CompanyCollection companies, Trader trader){
         this.companies = companies;
         this.trader = trader;
+        this.i = new IndexCalculators();
     }
 
+    /**
+    * Method processes calculate all indexes, Solver calculates probability to buy/sell, based on indexes
+    * and after all company with updated indexes and calculated probability will go to trader, that will
+     * buy/sell some amount of stocks
+     * Final pipeline: CandleStream -> IndexCalculators -> Solver -> Trader
+     */
     public void process(MarketDataResponse marketDataResponse) {
-            if(marketDataResponse.hasCandle()
-                    && checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse)
-            ){
+            if(marketDataResponse.hasCandle()) {
+                curCandle = marketDataResponse.getCandle();
                 try {
-                    curCandle = marketDataResponse.getCandle();
-                    curCandleCompany = companies.getByFigi(curCandle.getFigi());
+                    curCandleCompany = companies.getByFigi(curCandle.getFigi()); //get company of candle
 
-                    System.out.println(curCandle);
-                    curCandleCompany.getIndexByType(IndexType.RSI).printHistory();
+                    if (checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse))//Check if candle is on new timestap for some index. Different indexes has different timeframes
+                    {
+                        System.out.println(curCandle);
+                        curCandleCompany.getIndexByType(IndexType.RSI).printHistory();
 
-                    IndexCalculators i = new IndexCalculators();
+                        //Calculate each index if candle is on new timestap for this index
+                        //todo: calculate index only if candle is on new timestap for this index
+                        for (IndexType index : IndexType.values()) {
+                            curCandleCompany.setIndexValue(index
+                                    , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
+                        }
+                        trader.trade(curCandleCompany, curCandle,
+                                Solver.solution(curCandleCompany)); //solver calculates probability to buy/sell based on indexes
 
-                    //trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
-
-                    for(IndexType index : IndexType.values()){
-                        curCandleCompany.setIndexValue(index
-                                , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
-                        //curCandleCompany.getIndexByType(index).updateHistory(curCandle);
-                        //System.out.println(index);
-                        //System.out.println(curCandleCompany.getIndexByType(index).getValue());
                     }
-                    trader.trade(curCandleCompany, curCandle, Solver.solution(curCandleCompany));
+                    trader.sellIfStopPrice(curCandleCompany, curCandle);
                 } catch (CompanyNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -49,6 +64,9 @@ public class DataStreamProcessor {
 
     }
 
+    /**
+     * Check if new candle older that previous on the index timestap
+     */
     private boolean checkIfNewCandleForIndex(IndexType type, MarketDataResponse marketDataResponse){
         try {
             return companies.getByFigi(

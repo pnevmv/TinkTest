@@ -8,6 +8,9 @@ import Proccesor.Calculators.RSICalculator;
 
 import java.util.HashMap;
 
+/**
+ * class For storing all calculators. You can add yur own if wants
+ */
 public class IndexCalculators {
     HashMap<IndexType, IndexCalculator> calcMaps = new HashMap<>() ;
 

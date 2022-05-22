@@ -19,11 +19,13 @@ public class OpenDeals {
     }
 
     public void deletePartly(Deal deal, int numberOfSold) {
-        addDeal(new Deal(deal.getShareNumber() - numberOfSold, deal.getPrice(), deal.getStopPrice()));
+        if(deal.getShareNumber() - numberOfSold != 0) {
+            addDeal(new Deal(deal.getShareNumber() - numberOfSold, deal.getPrice(), deal.getStopPrice(), deal.getId()));
+        }
         deleteDeal(deal);
     }
 
-    public List<Deal> getOpenDeals() {
+    public List<Deal> getDealsAsList() {
         return this.openDeals;
     }
 

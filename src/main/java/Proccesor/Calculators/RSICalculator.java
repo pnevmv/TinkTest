@@ -21,8 +21,9 @@ import java.util.List;
  * RS = AverageOf(P)/ AverageOf(N)
  * P - sum of differences between close of neighbour candles, when close(i) > close(i-1)
  * N - sum of differences between close of neighbour candles, when close(i - 1) > close(i)
+ * RSI used for detecting moments to buy/sell stocks
  */
-public class RSICalculator implements IndexCalculator {
+public final class RSICalculator implements IndexCalculator {
 
     @Override
     public double calculateIndex(Company company, Candle candle) {
@@ -32,11 +33,13 @@ public class RSICalculator implements IndexCalculator {
         BigDecimal curCandleCLose = moneyProc.convertFromQuation(candle.getClose());
         List<BigDecimal> historyInNum = new ArrayList<>();
 
+        // translate History List to BigDecimal  List of Close prices
         for(HistoricCandle c : company.getIndexByType(IndexType.RSI).getHistoryAsList()){
             historyInNum.add(moneyProc.convertFromQuation(c.getClose()));
 
         }
 
+        //calculate P and N on history
         for(int i = 1; i < historyInNum.size(); i++) {
             if (historyInNum.get(i).compareTo(historyInNum.get(i - 1)) > 0) // pos += close(i) - close(i - 1)
                 positive = positive.add(
@@ -50,6 +53,7 @@ public class RSICalculator implements IndexCalculator {
                 );
         }
 
+        //add new candle to P or N
         if(curCandleCLose.compareTo(historyInNum.get(historyInNum.size() - 1)) > 0) //pos += candle.close - close(last)
             positive = positive.add(
                     curCandleCLose
@@ -61,16 +65,16 @@ public class RSICalculator implements IndexCalculator {
                             .subtract(curCandleCLose)
             );
 
-
+        // Make new candle part of history
         company.getIndexByType(IndexType.RSI).updateHistory(candle); //update history of candles
 
-
+        //zero dividing protection
         if(negative.equals(BigDecimal.ZERO)) return 100; //case N = 0; RSI = 100
 
         return  RSICalcFromNegAndPos(positive, negative).doubleValue();
     }
 
-
+    //calculate rsi as RSI = 100 - 100 / (1 + RS) , RS = P/N
     private BigDecimal RSICalcFromNegAndPos(BigDecimal pos, BigDecimal neg){
         return BigDecimal.valueOf(100).subtract(
                 BigDecimal.valueOf(100).divide(
@@ -81,15 +85,19 @@ public class RSICalculator implements IndexCalculator {
         );
     }
 
+    //Tests RSI Calc on hand inputted sample of close prices
     public void testRSICalc(List<Long> closes) {
+        //candle = last element of sample, has no influence on result
         Candle fakeCandle = Candle.newBuilder().setClose(
                 Quotation.newBuilder().setUnits(
                         closes.get(closes.size() - 1)).build())
                 .build();
         Company fakeCompany = CreateFakeTestHistory(closes);
 
+        //calculate by method
         double resOfCaculator = calculateIndex(fakeCompany, fakeCandle);
 
+        //calculate by hands
         double neg = 0;
         double pos = 0;
         for(int i = 1; i < closes.size(); i++){
@@ -103,6 +111,11 @@ public class RSICalculator implements IndexCalculator {
         System.out.println(resOfCaculator);
     }
 
+    /**
+     *
+     * @param closes - List of close prices to create history for testing calculations
+     * @return fake company to test calculating
+     */
     public Company CreateFakeTestHistory(List<Long> closes){
         Company c = new Company("test", 1, 1, 1, 1);
         LinkedList<HistoricCandle> hist = new LinkedList<>();

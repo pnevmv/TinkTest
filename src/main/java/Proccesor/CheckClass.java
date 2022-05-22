@@ -7,6 +7,9 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
 
+/**
+ * just class for testing indexes calculation. Nevermind
+ */
 public class CheckClass {
     private ArrayDeque<Candle> candleHistory;
 

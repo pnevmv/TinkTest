@@ -27,6 +27,7 @@ public class Company {
         this.companyIndexes = initializeIndexes();
         this.shareNumber = 0;
         this.isTrading = false;
+        this.openDeals = new OpenDeals();
     }
 
     private HashMap<IndexType, Index> initializeIndexes(){
@@ -106,13 +107,13 @@ public class Company {
      * @param lotNumber
      * @param price - price of whole deal (lot*price*lotNumber)
      */
-    public void buyShares(int lotNumber, double price) {
-        double stopPrice = 0; //TODO: calculating StopPrice
+    public void buyShares(int lotNumber, double price, int id) {
+        double stopPrice = price - price * (lossPercent / 100); //TODO: calculating StopPrice
         this.freeMoney -= price;
-        getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice));
+        getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice, id));
     }
 
-    public void sellShares (Deal deal, int lotNumber, double price) {
+    public void sellShares (Deal deal, int lotNumber, double price, int id) {
         getOpenDeals().deletePartly(deal, lotNumber);
         this.freeMoney += price;
     }
@@ -139,5 +140,9 @@ public class Company {
                 + "\nЦель-профит: " + this.getTakeProfit()
                 + "\nТрейдинг-статус: " + this.getIsTrading()
                 + "\nКол-во купленных акций: " + this.getShareNumber();
+    }
+
+    public int getLot() {
+        return lot;
     }
 }

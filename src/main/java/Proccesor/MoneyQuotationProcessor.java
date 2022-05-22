@@ -6,14 +6,27 @@ import java.math.BigDecimal;
 import java.util.Comparator;
 import java.util.function.BiFunction;
 
+
+/**
+ * class for work with money. You can compare quantities, or translate them to Big Decimal
+ */
 public class MoneyQuotationProcessor implements Comparator<Quotation> {
 
+    /**
+     * Compares money by units
+     */
     public BiFunction<Quotation, Quotation, Integer> compareByUnits = (q1, q2) ->
             Comparator.comparing(Quotation::getUnits).compare(q1, q2) ;
 
+    /**
+     * Compares money by nanos
+     */
     public BiFunction<Quotation, Quotation, Integer> compareByNanos = (q1, q2) ->
             Comparator.comparing(Quotation::getNano).compare(q1, q2) ;
 
+    /**
+     * Compares money
+     */
     @Override
     public int compare(Quotation o1, Quotation o2) {
         BiFunction<Quotation, Quotation, Integer> compare = (q1, q2) ->
@@ -21,8 +34,12 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
         return compare.apply(o1, o2);
     }
 
-    public BigDecimal convertFromQuation(Quotation quotation ){
-        return quotation.getUnits() == 0 && quotation.getNano() == 0 ? BigDecimal.ZERO : BigDecimal.valueOf(quotation.getUnits()).add(BigDecimal.valueOf(quotation.getNano(), 9));
+    /**
+     * Tranclates Quotation in Big Decimal with scale 9
+     */
+    public static BigDecimal convertFromQuation(Quotation quotation ){
+        return quotation.getUnits() == 0 && quotation.getNano() == 0 ?
+                BigDecimal.ZERO : BigDecimal.valueOf(quotation.getUnits()).add(BigDecimal.valueOf(quotation.getNano(), 9));
     }
 
 }

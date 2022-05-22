@@ -3,12 +3,14 @@ package Data;
 import java.util.Date;
 
 public class Deal {
+    private final int id;
     private final int shareNumber;
     private final double price;
     private final Date date;
     private final double stopPrice;
 
-    public Deal(int shareNumber, double price, double stopPrice) {
+    public Deal(int shareNumber, double price, double stopPrice, int id) {
+        this.id = id;
         this.shareNumber = shareNumber;
         this.price = price;
         this.date = new Date(System.currentTimeMillis());
@@ -31,6 +33,7 @@ public class Deal {
         return this.date;
     }
 
+    public int getId(){return this.id;}
     @Override
     public String toString() {
         return "Сделка стоимостью: " + this.getPrice()

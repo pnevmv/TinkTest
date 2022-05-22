@@ -6,6 +6,10 @@ import Data.IndexType;
 public class Solver {
 
     /**
+     * Class that calculates probability to buy/sell stocks from indexes.
+     * Solution to buy/sell represented as double in range [-1; 1] where '-' is to sell,
+     * '+' is to buy and value is probability to do this
+     * In future you can use ml to find optional coefficients for each index, or another model to combine them
      *
      * @param company
      * @return Solution to buy/sell as double in range [-1; 1] where '-' is to sell,
