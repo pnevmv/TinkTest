@@ -45,8 +45,9 @@ public class DataStreamProcessor {
 
                     //Check if candle is on new timestap for some index. Different indexes has different timeframes
                     if (checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse, curCandleCompany)) {
-                        System.out.println(curCandle);
-                        curCandleCompany.getIndexByType(IndexType.RSI).printHistory();
+
+                        //экстренна€ продажа если достигнут стоплосс
+                        trader.sellIfStopPrice(curCandleCompany, curCandle);
 
                         //Calculate each index if candle is on new timestap for this index
                         //todo: calculate index only if candle is on new timestap for this index
@@ -54,15 +55,19 @@ public class DataStreamProcessor {
                             curCandleCompany.setIndexValue(index
                                     , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
                         }
+
+                        System.out.println("Calc results:");
+                        System.out.println(curCandleCompany.getIndexByType(IndexType.RSI).getValue());
+                        System.out.println(Solver.solution(curCandleCompany));
+
                         trader.trade(curCandleCompany, curCandle,
                                 Solver.solution(curCandleCompany)); //solver calculates probability to buy/sell based on indexes
 
+
                     }
 
-                    //экстренна€ продажа если достигнут стоплосс
-                    trader.sellIfStopPrice(curCandleCompany, curCandle);
 
-                } catch (CompanyNotFoundException | NotEnoughMoneyToTradeException e) {
+                } catch (CompanyNotFoundException | NotEnoughMoneyToTradeException | io.grpc.StatusRuntimeException e ) {
                     e.printStackTrace();
                 }
             }

@@ -2,18 +2,19 @@ package Data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class OpenDeals {
-    private List<Deal> openDeals;
+    private CopyOnWriteArrayList<Deal> openDeals;
 
     public OpenDeals() {
-        this.openDeals = new ArrayList<>();
+        this.openDeals = new CopyOnWriteArrayList<>();
     }
 
+    public OpenDeals(Collection<Deal> deals){
+        this.openDeals = new CopyOnWriteArrayList<>(deals);
+    }
     public void addDeal(Deal deal) {
         openDeals.add(deal);
     }
@@ -62,5 +63,12 @@ public class OpenDeals {
             }
         }
         return Optional.empty();
+    }
+
+    public void printDeals(){
+        System.out.println("\n");
+        System.out.println("Открытые сделки:");
+        for(Deal d : openDeals) System.out.println(d.toString());
+        System.out.println("\n");
     }
 }

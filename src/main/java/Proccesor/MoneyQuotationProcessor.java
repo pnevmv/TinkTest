@@ -1,5 +1,6 @@
 package Proccesor;
 
+import ru.tinkoff.piapi.contract.v1.MoneyValue;
 import ru.tinkoff.piapi.contract.v1.Quotation;
 
 import java.math.BigDecimal;
@@ -40,6 +41,11 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
     public static BigDecimal convertFromQuation(Quotation quotation ){
         return quotation.getUnits() == 0 && quotation.getNano() == 0 ?
                 BigDecimal.ZERO : BigDecimal.valueOf(quotation.getUnits()).add(BigDecimal.valueOf(quotation.getNano(), 9));
+    }
+
+    public static BigDecimal convertFromMoneyValue(MoneyValue value ){
+        return value.getUnits() == 0 && value.getNano() == 0 ?
+                BigDecimal.ZERO : BigDecimal.valueOf(value.getUnits()).add(BigDecimal.valueOf(value.getNano(), 9));
     }
 
 }

@@ -1,6 +1,7 @@
 package Data;
 
 import Connection.*;
+import Proccesor.MoneyQuotationProcessor;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
@@ -74,9 +75,10 @@ public class Index {
     }
 
     public void printHistory(){
-        System.out.println("History:");
+        System.out.println("History of:" + indexType.name() + "index");
         for(HistoricCandle h : candleHistory){
-            System.out.println(h.getTime().getSeconds()); //todo: norm output
+            System.out.println("Close price" + String.valueOf(MoneyQuotationProcessor.convertFromQuation(h.getClose())));
+            System.out.println("Start time of candle" + String.valueOf(h.getTime().getSeconds())); //todo: norm output
         }
     }
 }

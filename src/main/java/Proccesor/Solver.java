@@ -20,8 +20,10 @@ public class Solver {
     }
 
     private static double RSIOnlyVersion(Company company){
-        double high = 70;
-        double low = 30;
+        // верхн€€ и нижн€€ граница индекса rsi, выход за которые €вл€етс€ сигналом к покупке/продаже. —тандартные значени€ 30 и 70
+        // √раницы снижены дл€ демонстрации работы бота. ѕодробнее по запросу RSI в интернете
+        double high = 60;
+        double low = 40;
         double rsi = company.getIndexByType(IndexType.RSI).getValue();
         if(rsi > high){
             return (rsi - high) / (100 - high); // if rsi = 100 probability 100%, if 70 probability 0%

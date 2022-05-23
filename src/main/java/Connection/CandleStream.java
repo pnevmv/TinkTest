@@ -34,7 +34,13 @@ public class CandleStream implements CandleSource{
     }
 
     public void initialize(DataStreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
-        Consumer<Throwable> streamError = e -> {System.out.println(e.toString()); }; //todo: logger, correct reconnection
+
+        Consumer<Throwable> streamError = e -> {
+            System.out.println("something is wrong");
+            System.out.println(e.toString());
+            e.printStackTrace();
+        }; //todo: logger, correct reconnection
+
         stream = marketStreamServ.newStream("Candles", processor::process, streamError);
         if (!companies.getFigisOfTradingCompanies().isEmpty()) stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
     }

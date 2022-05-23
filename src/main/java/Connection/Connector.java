@@ -4,9 +4,7 @@ import Data.CompanyCollection;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.DataStreamProcessor;
-import Proccesor.TradeStreamProcessor;
 import com.google.protobuf.Timestamp;
-import ru.tinkoff.piapi.contract.v1.Share;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.models.Portfolio;
@@ -33,7 +31,7 @@ public class Connector{
     }
 
     public Connector(InvestApi api, CompanyCollection companies, String accountId) {
-        this.tradeStream = new TradeStream(api, accountId);
+        this.tradeStream = new TradeStream(api, accountId, companies);
         this.candleStream = new CandleStream(api, companies);
         this.api = api;
         this.companies = companies;
@@ -52,9 +50,8 @@ public class Connector{
         return this.candleStream;
     }
 
-    public void initializeStreams( DataStreamProcessor dataProc, TradeStreamProcessor tradeProc) {
+    public void initializeStreams( DataStreamProcessor dataProc) {
         try {
-            tradeStream.initialize(tradeProc);
             candleStream.initialize(dataProc);
         } catch (OutNumberOfReconnectAttemptsException e) {
             e.printStackTrace();
@@ -120,13 +117,13 @@ public class Connector{
     }
 
     public boolean isExistByFigi(String figi) {
-        Share share;
-        share = api.getInstrumentsService().getShareByFigiSync(figi);
-        return !share.isInitialized();
+        var smt = api.getInstrumentsService().getInstrumentByFigiSync(figi);
+
+        return (!smt.isInitialized());
     }
 
     public int getLotByFigi(String figi){
-        return api.getInstrumentsService().getShareByFigiSync(figi).getLot();
+        return api.getInstrumentsService().getInstrumentByFigiSync(figi).getLot();
     }
 }
 

@@ -8,6 +8,7 @@ import Connection.TradeStream;
 import Data.Company;
 import Data.CompanyCollection;
 import Data.Deal;
+import Exceptions.CompanyNotFoundException;
 import Exceptions.NotEnoughMoneyToTradeException;
 import ru.tinkoff.piapi.contract.v1.Candle;
 import ru.tinkoff.piapi.core.InvestApi;
@@ -30,26 +31,25 @@ public class Trader {
         this.companies = connector.getCompanies();
     }
 
-    //todo: учесть комиссию
+    //todo: СѓС‡РµСЃС‚СЊ РєРѕРјРёСЃСЃРёСЋ
 
-    public void trade(Company company, Candle candle, double probability) throws NotEnoughMoneyToTradeException {
+    public void trade(Company company, Candle candle, double probability) throws NotEnoughMoneyToTradeException, CompanyNotFoundException {
         System.out.println("--GOING TO TRADE--");
         System.out.println(probability);
 
-        if(probability > 0) buyLots(probability, candle, company);
+        if(probability > 0) buyLots( probability, candle, company);
 
         if(probability < 0) sellLots((-1) * probability, candle, company);
-
 
     }
 
 
 
 
-    public void sellIfStopPrice(Company company, Candle candle){
+    public void sellIfStopPrice(Company company, Candle candle) throws CompanyNotFoundException {
         BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
         for( Deal d  : company.getOpenDeals().getDealsAsList()){
-            //если текущая цена ниже стоп-цены, то продаем все лоты
+            //РµСЃР»Рё С‚РµРєСѓС‰Р°СЏ С†РµРЅР° РЅРёР¶Рµ СЃС‚РѕРї-С†РµРЅС‹, С‚Рѕ РїСЂРѕРґР°РµРј РІСЃРµ Р»РѕС‚С‹
             if(d.getStopPrice().compareTo(close) >= 0){
                 tradeStream.sellStock((d.getLotNumber()), candle.getClose(), company.getFigi(), d);
             }
@@ -57,62 +57,72 @@ public class Trader {
     }
 
 
-   public void buyLots(double probability, Candle candle, Company company) throws NotEnoughMoneyToTradeException {
+   public void buyLots(double probability, Candle candle, Company company) throws NotEnoughMoneyToTradeException, CompanyNotFoundException {
         long lots;
 
        BigDecimal closePrice = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
-       // цена лота = цена закрытия * лотность инструмента
+       // С†РµРЅР° Р»РѕС‚Р° = С†РµРЅР° Р·Р°РєСЂС‹С‚РёСЏ * Р»РѕС‚РЅРѕСЃС‚СЊ РёРЅСЃС‚СЂСѓРјРµРЅС‚Р°
        BigDecimal lotPrice = closePrice.multiply(BigDecimal.valueOf(company.getLot()));
 
        BigDecimal freeMoney =  BigDecimal.valueOf(company.getFreeMoney());
        BigDecimal probab = BigDecimal.valueOf(probability);
 
-       //если хватает только на 1 лот и вероятность больше 60, взять 1 лот
+       //РµСЃР»Рё С…РІР°С‚Р°РµС‚ С‚РѕР»СЊРєРѕ РЅР° 1 Р»РѕС‚ Рё РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ Р±РѕР»СЊС€Рµ 60, РІР·СЏС‚СЊ 1 Р»РѕС‚
        if(freeMoney.divide(lotPrice, 9, RoundingMode.HALF_DOWN).intValue() == 1 && probability > 0.6) lots =  1;
-       /*Доступные деньги / цена лота = доступное количество лотов, умножением на вероятность получаем
-       количество лотов пропорциональное вероятности.
-       Т.е. при вероятности 50% бот купит инструментов на 50% от количества доступных денег
-       (с поправкой на лотность, округление идет в сторону меньшего количества лотов
+
+       /*Р”РѕСЃС‚СѓРїРЅС‹Рµ РґРµРЅСЊРіРё / С†РµРЅР° Р»РѕС‚Р° = РґРѕСЃС‚СѓРїРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р»РѕС‚РѕРІ, СѓРјРЅРѕР¶РµРЅРёРµРј РЅР° РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ РїРѕР»СѓС‡Р°РµРј
+       РєРѕР»РёС‡РµСЃС‚РІРѕ Р»РѕС‚РѕРІ РїСЂРѕРїРѕСЂС†РёРѕРЅР°Р»СЊРЅРѕРµ РІРµСЂРѕСЏС‚РЅРѕСЃС‚Рё.
+       Рў.Рµ. РїСЂРё РІРµСЂРѕСЏС‚РЅРѕСЃС‚Рё 50% Р±РѕС‚ РєСѓРїРёС‚ РёРЅСЃС‚СЂСѓРјРµРЅС‚РѕРІ РЅР° 50% РѕС‚ РєРѕР»РёС‡РµСЃС‚РІР° РґРѕСЃС‚СѓРїРЅС‹С… РґРµРЅРµРі
+       (СЃ РїРѕРїСЂР°РІРєРѕР№ РЅР° Р»РѕС‚РЅРѕСЃС‚СЊ, РѕРєСЂСѓРіР»РµРЅРёРµ РёРґРµС‚ РІ СЃС‚РѕСЂРѕРЅСѓ РјРµРЅСЊС€РµРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° Р»РѕС‚РѕРІ
         */
+
        else lots = freeMoney.divide(lotPrice, 9, RoundingMode.HALF_DOWN).multiply(probab).intValue();
+       System.out.println("РљРѕР»РёС‡РµСЃС‚РІРѕ СЃРІРѕР±РѕРґРЅС‹С… РґРµРЅРµРі:" + freeMoney.toString());
+       System.out.println("РљРѕР»РёС‡РµСЃС‚РІРѕ Р»РѕС‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ РјРѕР¶РЅРѕ Р±С‹ РєСѓРїРёС‚СЊ:" + lots);
 
-       /*если невозможно купить ни одного лота, и до этого не было куплено ни одного лота, то пердупредить пользователя
-       о невозмоности торговли
+       /*
+       РµСЃР»Рё РЅРµРІРѕР·РјРѕР¶РЅРѕ РєСѓРїРёС‚СЊ РЅРё РѕРґРЅРѕРіРѕ Р»РѕС‚Р°, Рё РґРѕ СЌС‚РѕРіРѕ РЅРµ Р±С‹Р»Рѕ РєСѓРїР»РµРЅРѕ РЅРё РѕРґРЅРѕРіРѕ Р»РѕС‚Р°, С‚Рѕ РїРµСЂРґСѓРїСЂРµРґРёС‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+       Рѕ РЅРµРІРѕР·РјРѕРЅРѕСЃС‚Рё С‚РѕСЂРіРѕРІР»Рё
         */
-       if(lots == 0 && company.getOpenDeals().getDealsAsList().isEmpty()) throw new NotEnoughMoneyToTradeException();
 
-       //запрос на покупку
+       if(company.getFreeMoney() < (MoneyQuotationProcessor.convertFromQuation(candle.getClose()).doubleValue() * company.getLot()) && company.getOpenDeals().getDealsAsList().isEmpty()) throw new NotEnoughMoneyToTradeException();
+
+       //Р·Р°РїСЂРѕСЃ РЅР° РїРѕРєСѓРїРєСѓ
        if(lots > 0) tradeStream.buyStock(
                lots,
                candle.getClose(),
                company.getFigi()
        );
 
+
    }
 
 
-    public void sellLots(double probability, Candle candle, Company company) {
+    public void sellLots(double probability, Candle candle, Company company) throws CompanyNotFoundException {
         BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
-        // множитель для пересчета цены тейкпрофита
+        // РјРЅРѕР¶РёС‚РµР»СЊ РґР»СЏ РїРµСЂРµСЃС‡РµС‚Р° С†РµРЅС‹ С‚РµР№РєРїСЂРѕС„РёС‚Р°
         BigDecimal  companyTakeprofit = BigDecimal.valueOf(1 + (company.getTakeProfit() / 100));
 
 
         for(Deal d : company.getOpenDeals().getDealsAsList()){
-            //если инстумент превысил свой тейкпрофит
+            //РµСЃР»Рё РёРЅСЃС‚СѓРјРµРЅС‚ РїСЂРµРІС‹СЃРёР» СЃРІРѕР№ С‚РµР№РєРїСЂРѕС„РёС‚
             if( (d.getPrice().multiply(companyTakeprofit)).compareTo(close) <= 0){
                 /*
-                 в случае доступности 1 лота продаем целиком, иначе долю высчитываемую через вероятность
-                 (берется целая часть, округление в меньшую сторону
+                 РІ СЃР»СѓС‡Р°Рµ РґРѕСЃС‚СѓРїРЅРѕСЃС‚Рё 1 Р»РѕС‚Р° РїСЂРѕРґР°РµРј С†РµР»РёРєРѕРј, РёРЅР°С‡Рµ РґРѕР»СЋ РІС‹СЃС‡РёС‚С‹РІР°РµРјСѓСЋ С‡РµСЂРµР· РІРµСЂРѕСЏС‚РЅРѕСЃС‚СЊ
+                 (Р±РµСЂРµС‚СЃСЏ С†РµР»Р°СЏ С‡Р°СЃС‚СЊ, РѕРєСЂСѓРіР»РµРЅРёРµ РІ РјРµРЅСЊС€СѓСЋ СЃС‚РѕСЂРѕРЅСѓ
                  */
-                if(d.getLotNumber() == 1)  tradeStream.sellStock(1, candle.getClose(), company.getFigi(), d);
+               if(d.getLotNumber() == 1) System.out.println(1); tradeStream.sellStock(1, candle.getClose(), company.getFigi(), d);
                 if (d.getLotNumber() > 1){
+                    System.out.println("РџСЂРѕРґР°РґРёРј РїРѕР¶Р°Р»СѓР№: " +  (long)(d.getLotNumber() * probability) + " Р»РѕС‚РѕРІ Сѓ Р°Р№РґРё" + d.getId());
                     tradeStream.sellStock(
-                            (long)(d.getLotNumber() * probability), //todo:нормальное взятие целой части
+                            (long)(d.getLotNumber() * probability), //todo:РЅРѕСЂРјР°Р»СЊРЅРѕРµ РІР·СЏС‚РёРµ С†РµР»РѕР№ С‡Р°СЃС‚Рё
                             candle.getClose(),
                             company.getFigi(),
                             d
                     );
                 }
+
+
             }
         }
     }

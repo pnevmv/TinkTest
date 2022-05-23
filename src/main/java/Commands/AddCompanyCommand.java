@@ -43,6 +43,7 @@ public class AddCompanyCommand extends AbstractCommand{
 
             Company company = new Company(argument, moneyToTrade, lossPercent, takeProfit, lot);
             companyCollection.putCompanyByFigi(argument, company);
+            Console.println("Успешно добавлено!");
         } catch (IllegalCommandArgsException | ExchangeUnavailableException exception) {
             Console.printError(exception.getMessage());
         }

@@ -39,7 +39,7 @@ public class Deal {
     public String toString() {
         return "Сделка стоимостью: " + this.getPrice()
                 + "\nЦена экстренной продажи:" + this.getStopPrice()
-                + "\nКол-во приобретенных акций:" + this.getLotNumber()
+                + "\nКол-во приобретенных лотов:" + this.getLotNumber()
                 + "\nДата сделки: " + this.getDate();
     }
 }

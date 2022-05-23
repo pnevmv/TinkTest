@@ -54,7 +54,7 @@ public class Company {
 
     public void startTrade(CandleSource candleSource) {
         for (Index index: companyIndexes.values()) {
-            index.loadHistory(figi, candleSource); //TODO:calculating initial indexes
+            index.loadHistory(figi, candleSource);//TODO:calculating initial indexes
         }
         this.isTrading = true;
     }
@@ -110,7 +110,7 @@ public class Company {
      * @param price - price of whole deal (lot*price*lotNumber)
      */
     public void buyShares(long lotNumber, BigDecimal price, String id) {
-        BigDecimal lossCoefficient = BigDecimal.valueOf(1 - lossPercent / 100);
+        BigDecimal lossCoefficient = BigDecimal.valueOf(1 - lossPercent / 100 + 0.006); // 0.006 - комиссия в обе стороны
         BigDecimal stopPrice = (price.multiply(lossCoefficient));
         getOpenDeals().addDeal(new Deal(lotNumber, price, stopPrice, id));
 
