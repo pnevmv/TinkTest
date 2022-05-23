@@ -10,6 +10,8 @@ import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.exception.ApiRuntimeException;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
