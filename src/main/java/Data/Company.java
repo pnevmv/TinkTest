@@ -71,34 +71,6 @@ public class Company {
         this.isTrading = true;
     }
 
-    public String getFigi() {
-        return this.figi;
-    }
-
-    public void setLossPercent(double value) {
-        this.lossPercent = value;
-    }
-
-    public void setTakeProfit(double value) {
-        this.takeProfit = value;
-    }
-
-    public double getMoneyToTrade() {
-        return this.moneyToTrade;
-    }
-
-    public double getFreeMoney() {
-        return this.freeMoney;
-    }
-
-    public void setIndexValue(IndexType indexType, double value) {
-        companyIndexes.get(indexType).setValue(value);
-    }
-
-    public Index getIndexByType(IndexType indexType) {
-        return this.companyIndexes.get(indexType);
-    }
-
     /**
      * stop trading of company
      * @param candleStream
@@ -106,18 +78,6 @@ public class Company {
     public void tradeOff(CandleStream candleStream) {
         this.isTrading = false;
         candleStream.updateSubscription();
-    }
-
-    public boolean getIsTrading() {
-        return this.isTrading;
-    }
-
-    public void setShareNum(int number) {
-        this.shareNumber = number;
-    }
-
-    public int getShareNumber() {
-        return this.shareNumber;
     }
 
     /**
@@ -161,6 +121,50 @@ public class Company {
         return this.takeProfit;
     }
 
+    public boolean getIsTrading() {
+        return this.isTrading;
+    }
+
+    public void setShareNum(int number) {
+        this.shareNumber = number;
+    }
+
+    public int getShareNumber() {
+        return this.shareNumber;
+    }
+
+    public String getFigi() {
+        return this.figi;
+    }
+
+    public void setLossPercent(double value) {
+        this.lossPercent = value;
+    }
+
+    public void setTakeProfit(double value) {
+        this.takeProfit = value;
+    }
+
+    public double getMoneyToTrade() {
+        return this.moneyToTrade;
+    }
+
+    public double getFreeMoney() {
+        return this.freeMoney;
+    }
+
+    public void setIndexValue(IndexType indexType, double value) {
+        companyIndexes.get(indexType).setValue(value);
+    }
+
+    public Index getIndexByType(IndexType indexType) {
+        return this.companyIndexes.get(indexType);
+    }
+
+    public int getLot() {
+        return lot;
+    }
+
     @Override
     public String toString() {
         return "Компания:"
@@ -170,9 +174,5 @@ public class Company {
                 + "\nЦель-профит: " + this.getTakeProfit()
                 + "\nТрейдинг-статус: " + this.getIsTrading()
                 + "\nКол-во купленных акций: " + this.getShareNumber();
-    }
-
-    public int getLot() {
-        return lot;
     }
 }
