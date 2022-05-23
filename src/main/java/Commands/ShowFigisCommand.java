@@ -4,14 +4,22 @@ import Data.CompanyCollection;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
+/**
+ * Class command for showing
+ * all figis of companies in collection to trade
+ */
 public class ShowFigisCommand extends AbstractCommand {
-    private CompanyCollection companyCollection;
+    private final CompanyCollection companyCollection;
 
     public ShowFigisCommand(CompanyCollection companyCollection) {
         super("show-figis", "display figi of each company");
         this.companyCollection = companyCollection;
     }
 
+    /**
+     * Executes the command
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) {
         try {

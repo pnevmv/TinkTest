@@ -113,7 +113,7 @@ public class Company {
     /**
      *
      * @param lotNumber
-     * @param price - price of whole deal (lot*price*lotNumber)
+     * @param price - price of whole deal (lot * price * lotNumber)
      */
     public void buyShares(long lotNumber, BigDecimal price, String id) {
         BigDecimal lossCoefficient = BigDecimal.valueOf(1 - lossPercent / 100 + 0.006); // 0.006 - комиссия в обе стороны

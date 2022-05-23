@@ -2,6 +2,10 @@ package Commands;
 
 import UI.Console.Console;
 
+/**
+ * Class command for displaying
+ * all commands and their description
+ */
 public class HelpCommand extends AbstractCommand {
 
     public HelpCommand() {
@@ -9,8 +13,8 @@ public class HelpCommand extends AbstractCommand {
     }
 
     /**
-     * Executes the command.
-     * @return Command exit status.
+     * Executes the command
+     * @return success/fail execution
      */
     @Override
     public boolean execute(String argument) {

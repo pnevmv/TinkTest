@@ -7,6 +7,10 @@ import UI.Console.Console;
 
 import java.util.Collection;
 
+/**
+ * Class command for showing
+ * all companies in collection to trade
+ */
 public class ShowCommand extends AbstractCommand {
     private final CompanyCollection companyCollection;
 
@@ -15,6 +19,10 @@ public class ShowCommand extends AbstractCommand {
         this.companyCollection = companyCollection;
     }
 
+    /**
+     * Executes the command
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) {
         try {

@@ -1,6 +1,5 @@
 package Commands;
 
-
 import Connection.Connector;
 import Data.Company;
 import Data.CompanyBuilder;
@@ -13,7 +12,8 @@ import UI.Console.Console;
 import java.math.BigDecimal;
 
 /**
- * User can change amount of money that bot can use for trading stocks of this company
+ * Class command for changing parameters
+ * that bot can use for trading stocks of this company
  */
 public class ChangeCompanyCommand extends AbstractCommand{
     private final CompanyBuilder companyBuilder;
@@ -21,12 +21,16 @@ public class ChangeCompanyCommand extends AbstractCommand{
     private final Connector connector;
 
     public ChangeCompanyCommand(CompanyBuilder companyBuilder, CompanyCollection companyCollection, Connector connector) {
-        super("change-money {figi}", "Change money allowed for company");
+        super("change-parameters {figi}", "Change money allowed for company");
         this.companyBuilder = companyBuilder;
         this.companyCollection = companyCollection;
         this.connector = connector;
     }
 
+    /**
+     * @param argument - figi of company to change
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) {
         try {
@@ -44,10 +48,11 @@ public class ChangeCompanyCommand extends AbstractCommand{
 
             Company newCompany = new Company(argument, moneyToTrade, lossPercent, takeProfit, lot);
             companyCollection.putCompanyByFigi(argument, newCompany);
-
+            Console.println("Company has been changed successfully");
         } catch (IllegalCommandArgsException | ExchangeUnavailableException | CompanyNotFoundException exception) {
             Console.printError(exception.getMessage());
         }
+
         return true;
     }
 }

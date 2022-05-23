@@ -12,6 +12,10 @@ import UI.Console.Console;
 
 import java.math.BigDecimal;
 
+
+/**
+ * Class command for adding new company in collection
+ */
 public class AddCompanyCommand extends AbstractCommand{
     private final CompanyBuilder companyBuilder;
     private final CompanyCollection companyCollection;
@@ -25,7 +29,8 @@ public class AddCompanyCommand extends AbstractCommand{
     }
 
     /**
-     * @param argument - figi, moneyToTrade, lossPercent, takeProfit
+     * @param argument - figi of company to add
+     * @return success/fail execution
      */
     @Override
     public boolean execute(String argument) throws CommandException {
@@ -43,7 +48,7 @@ public class AddCompanyCommand extends AbstractCommand{
 
             Company company = new Company(argument, moneyToTrade, lossPercent, takeProfit, lot);
             companyCollection.putCompanyByFigi(argument, company);
-            Console.println("Успешно добавлено!");
+            Console.println("Company successfully added!");
         } catch (IllegalCommandArgsException | ExchangeUnavailableException exception) {
             Console.printError(exception.getMessage());
         }

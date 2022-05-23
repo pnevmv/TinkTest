@@ -2,6 +2,9 @@ package Commands;
 
 import Exceptions.CommandException;
 
+/**
+ * Abstract class for all command
+ */
 public class AbstractCommand implements Command {
     private final String name;
     private final String description;
@@ -18,16 +21,20 @@ public class AbstractCommand implements Command {
         return name;
     }
 
-    @Override
-    public boolean execute(String argument) throws CommandException {
-        return true;
-    }
-
     /**
      * @return Description of the command.
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * @param argument of command if it's necessary
+     * @return success/fail execution
+     */
+    @Override
+    public boolean execute(String argument) throws CommandException {
+        return true;
     }
 
     @Override

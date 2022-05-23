@@ -22,13 +22,12 @@ public class Main {
     //"t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ"
 
     //TODO: exceptions and commentaries
-    //TODO: catch if exchange is not available
+    //TODO: catch if exchange is not available (18:40)
     //TODO: "success"/"fail" after command execution
     //TODO: everything in english
     //TODO: remake "TradeStream"
     //TODO: write readme and building of project
-    //TODO: english home task
-    //TODO: wash socks
+
     public static void main(String[] args) {
 
         try (Scanner userScanner = new Scanner(System.in)) {

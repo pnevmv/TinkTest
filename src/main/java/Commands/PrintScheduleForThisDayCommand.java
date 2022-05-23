@@ -5,6 +5,9 @@ import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
+/**
+ * Class command for printing working schedule of exchange for this day
+ */
 public class PrintScheduleForThisDayCommand extends AbstractCommand {
     private final Connector connector;
 
@@ -13,6 +16,11 @@ public class PrintScheduleForThisDayCommand extends AbstractCommand {
         this.connector = connector;
     }
 
+    /**
+     * Executes the command
+     * @param argument - name of exchange
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) throws CommandException {
         try {

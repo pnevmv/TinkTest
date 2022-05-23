@@ -7,6 +7,10 @@ import Exceptions.CompanyNotFoundException;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
+/**
+ * Class command for starting
+ * trade company by figi in collection to trade
+ */
 public class StartTradeCommand extends AbstractCommand {
     private final CompanyCollection companies;
     private final CandleStream stream;
@@ -17,6 +21,11 @@ public class StartTradeCommand extends AbstractCommand {
         this.stream = stream;
     }
 
+    /**
+     * Executes the command
+     * @param argument - figi of company
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) throws CommandException {
         try {

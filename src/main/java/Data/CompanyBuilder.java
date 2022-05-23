@@ -6,6 +6,10 @@ import UI.Console.Console;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
+/**
+ * Class for communications with user
+ * to get parameters of creating/changing of company
+ */
 public class CompanyBuilder {
     private final Scanner userScanner;
 
@@ -13,26 +17,10 @@ public class CompanyBuilder {
         this.userScanner = userScanner;
     }
 
-    public BigDecimal askAllowedMoney() {
-        BigDecimal value;
-
-        while (true) {
-            try {
-                Console.println("Input new value of money that you want to trade:");
-                Console.print("> ");
-                String stringValue = userScanner.nextLine().trim();
-                value = new BigDecimal(stringValue);
-
-                if (value.compareTo(BigDecimal.ZERO) < 0) throw new IllegalCommandArgsException();
-                break;
-            } catch (IllegalCommandArgsException exception) {
-                Console.printError("Invalid value");
-            }
-        }
-
-        return value;
-    }
-
+    /**
+     * Requests allowable loss percentage
+     * @return - loss percentage
+     */
     public double askLossPercent() {
         double loss;
 
@@ -53,6 +41,10 @@ public class CompanyBuilder {
         return loss;
     }
 
+    /**
+     * Requests allowable percentage of profit that user need
+     * @return - profit percentage
+     */
     public double askTakeProfit() {
         double takeProfit;
 
@@ -73,6 +65,10 @@ public class CompanyBuilder {
         return takeProfit;
     }
 
+    /**
+     * Requests the value of the money the user wants to allocate for trading
+     * @return - profit percentage
+     */
     public double askMoneyToTrade() {
         double value;
 
@@ -93,6 +89,10 @@ public class CompanyBuilder {
         return value;
     }
 
+    /**
+     * Requests the name of exchange
+     * @return - name of exchange
+     */
     public String askNameOfExchange() {
         String name;
 
@@ -110,5 +110,30 @@ public class CompanyBuilder {
         }
 
         return name;
+    }
+
+    /**
+     * Requests the value of the money the user wants
+     * to allocate for trading (with more accuracy)
+     * @return - profit percentage
+     */
+    public BigDecimal askAllowedMoney() {
+        BigDecimal value;
+
+        while (true) {
+            try {
+                Console.println("Input new value of money that you want to trade:");
+                Console.print("> ");
+                String stringValue = userScanner.nextLine().trim();
+                value = new BigDecimal(stringValue);
+
+                if (value.compareTo(BigDecimal.ZERO) < 0) throw new IllegalCommandArgsException();
+                break;
+            } catch (IllegalCommandArgsException exception) {
+                Console.printError("Invalid value");
+            }
+        }
+
+        return value;
     }
 }

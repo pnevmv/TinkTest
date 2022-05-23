@@ -6,6 +6,10 @@ import Exceptions.CommandException;
 import Exceptions.IllegalCommandArgsException;
 import UI.Console.Console;
 
+/**
+ * Class command for stopping
+ * trade company by figi in collection to trade
+ */
 public class StopTradeCommand extends AbstractCommand {
     private final CompanyCollection companies;
     private final CandleStream stream;
@@ -16,6 +20,11 @@ public class StopTradeCommand extends AbstractCommand {
         this.stream = stream;
     }
 
+    /**
+     * Executes the command
+     * @param argument - figi of company
+     * @return success/fail execution
+     */
     @Override
     public boolean execute(String argument) throws CommandException {
         try {

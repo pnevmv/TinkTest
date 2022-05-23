@@ -25,8 +25,8 @@ public class CommandManager {
     }
 
     /**
-     * Prints info about the all commands.
-     * @param argument It's argument.
+     * Prints info about all commands.
+     * @param argument - it must be empty.
      */
     public void helpCommand(String argument) {
         HelpCommand helpCommand = new HelpCommand();
