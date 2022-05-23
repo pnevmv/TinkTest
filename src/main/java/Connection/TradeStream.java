@@ -73,11 +73,10 @@ public class TradeStream {
             curComp.getOpenDeals().printDeals();
         }
 
-
     }
 
     /**
-     *  makes synchronized sell order, and if order is complete call sellShares method from Company class,
+     * Makes synchronized sell order, and if order is complete call sellShares method from Company class,
      * @param lots
      * @param price
      * @param figi

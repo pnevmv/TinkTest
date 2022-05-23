@@ -4,6 +4,7 @@ import Data.CompanyCollection;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.DataStreamProcessor;
+import UI.Console.Console;
 import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
@@ -16,7 +17,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
- * Class for unary requests (initialisations, verifications etc.)
+ * Class for connection with api
+ * (streams initialisation, verifications, etc.)
  */
 public class Connector{
     private final TradeStream tradeStream;
@@ -24,10 +26,6 @@ public class Connector{
     private final InvestApi api;
     private final CompanyCollection companies;
     private final String accountId;
-
-    public CompanyCollection getCompanies() {
-        return companies;
-    }
 
     public Connector(InvestApi api, CompanyCollection companies, String accountId) {
         this.tradeStream = new TradeStream(api, accountId, companies);
@@ -37,33 +35,34 @@ public class Connector{
         this.accountId = accountId;
     }
 
-    public String getAccountId() {
-        return this.accountId;
-    }
-
-    public TradeStream getTradeStream() {
-        return this.tradeStream;
-    }
-
-    public CandleStream getCandleStream() {
-        return this.candleStream;
-    }
-
-    public void initializeStreams( DataStreamProcessor dataProc) {
+    /**
+     * Initializes candle stream
+     * @param dataProc - processor - how to communicate with stream of data
+     */
+    public void initializeStreams(DataStreamProcessor dataProc) {
         try {
             candleStream.initialize(dataProc);
-        } catch (OutNumberOfReconnectAttemptsException e) {
-            e.printStackTrace();
-        } catch (CompanyNotFoundException e) {
-            System.out.println("Please input again:");
-            e.printStackTrace();
+        } catch (OutNumberOfReconnectAttemptsException exception) {
+            exception.printStackTrace();
+        } catch (CompanyNotFoundException exception) {
+            Console.println("Please input again:");
         }
     }
 
+    /**
+     * Converts from Timestamp to Date
+     * @param timestamp
+     * @return converted data
+     */
     public Date timestampToDate(Timestamp timestamp) {
         return new Date(timestamp.getSeconds() * 1000);
     }
 
+    /**
+     * Availability check
+     * @param name of exchange
+     * @return
+     */
     public boolean isAvailableNow(String name) {
         var tradingSchedules =
                 api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(1, ChronoUnit.DAYS));
@@ -76,6 +75,10 @@ public class Connector{
                 || now >= today.getEndTime().getSeconds();
     }
 
+    /**
+     * Prints schedule for one day
+     * @param name of exchange
+     */
     public void printScheduleForThisDay(String name) {
         var tradingSchedules =
                 api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(6, ChronoUnit.DAYS));
@@ -85,11 +88,15 @@ public class Connector{
             String startTime = new SimpleDateFormat("HH.mm.ss").format(timestampToDate(today.getStartTime()));
             String endTime = new SimpleDateFormat("HH.mm.ss").format(timestampToDate(today.getEndTime()));
 
-            System.out.println("Schedule for today (" + name + "):\nOpening: " + startTime + "\nClosing: " + endTime);
+            Console.println("Schedule for today (" + name + "):\nOpening: " + startTime + "\nClosing: " + endTime);
         }
-        else System.out.println("The exchange is closed today");
+        else Console.println("The exchange is closed today");
     }
 
+    /**
+     * Prints schedule for one week
+     * @param name of exchange
+     */
     public void printSchedule(String name) {
         var tradingSchedules =
                 api.getInstrumentsService().getTradingScheduleSync(name, Instant.now(), Instant.now().plus(5, ChronoUnit.DAYS));
@@ -107,6 +114,16 @@ public class Connector{
         }
     }
 
+    /**
+     * Existing check
+     * @param figi - id of instrument
+     * @return
+     */
+    public boolean isExistByFigi(String figi) {
+        var smt = api.getInstrumentsService().getInstrumentByFigiSync(figi);
+        return (!smt.isInitialized());
+    }
+
     public Portfolio getPortfolio(String accountId) {
         return api.getOperationsService().getPortfolioSync(accountId);
     }
@@ -115,14 +132,25 @@ public class Connector{
         return getPortfolio(getAccountId()).getTotalAmountCurrencies().getValue();
     }
 
-    public boolean isExistByFigi(String figi) {
-        var smt = api.getInstrumentsService().getInstrumentByFigiSync(figi);
-
-        return (!smt.isInitialized());
-    }
-
-    public int getLotByFigi(String figi){
+    public int getLotByFigi(String figi) {
         return api.getInstrumentsService().getInstrumentByFigiSync(figi).getLot();
     }
+
+    public CompanyCollection getCompanies() {
+        return companies;
+    }
+
+    public String getAccountId() {
+        return this.accountId;
+    }
+
+    public TradeStream getTradeStream() {
+        return this.tradeStream;
+    }
+
+    public CandleStream getCandleStream() {
+        return this.candleStream;
+    }
+
 }
 

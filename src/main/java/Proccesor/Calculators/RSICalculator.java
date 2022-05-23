@@ -89,8 +89,6 @@ public final class RSICalculator implements IndexCalculator {
         );
     }
 
-
-
     //Tests RSI Calc on hand inputted sample of close prices
     public void testRSICalc(List<Long> closes) {
         //candle = last element of sample, has no influence on result
@@ -101,7 +99,7 @@ public final class RSICalculator implements IndexCalculator {
         Company fakeCompany = CreateFakeTestHistory(closes);
 
         //calculate by method
-        double resOfCaculator = calculateIndex(fakeCompany, fakeCandle);
+        double resOfCalculator = calculateIndex(fakeCompany, fakeCandle);
 
         //calculate by hands
         double neg = 0;

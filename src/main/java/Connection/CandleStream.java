@@ -6,7 +6,6 @@ import Proccesor.DataStreamProcessor;
 import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 import ru.tinkoff.piapi.core.InvestApi;
-import ru.tinkoff.piapi.core.MarketDataService;
 import ru.tinkoff.piapi.core.stream.MarketDataStreamService;
 import ru.tinkoff.piapi.core.stream.MarketDataSubscriptionService;
 import ru.tinkoff.piapi.contract.v1.SubscriptionInterval;
@@ -73,7 +72,7 @@ public class CandleStream implements CandleSource{
     /**
      * Calculate how many seconds in every candle Interval
      * @param candleInterval
-     * @return
+     * @return econds in every candle Interval
      */
     private int secondsInCandleInterval(CandleInterval candleInterval){
         switch(candleInterval){
