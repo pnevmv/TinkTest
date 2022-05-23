@@ -39,8 +39,8 @@ public class TradeStream {
     }*/
 
     /**
-     * makes synchronized buy order, and if order is complete call buyShare method from Company
-     * @param lots
+     * makes synchronized buy order, and if order is complete call buyShare method from Company class,
+     * @param lots - number of lots
      * @param price
      * @param figi
      * @throws CompanyNotFoundException
@@ -77,7 +77,7 @@ public class TradeStream {
     }
 
     /**
-     *
+     *  makes synchronized sell order, and if order is complete call sellShares method from Company class,
      * @param lots
      * @param price
      * @param figi

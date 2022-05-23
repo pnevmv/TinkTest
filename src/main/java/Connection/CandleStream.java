@@ -15,24 +15,27 @@ import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
 
-
+/**
+ * Class-wrapper for stream of candles
+ */
 public class CandleStream implements CandleSource{
     private final CompanyCollection companies;
     private final MarketDataStreamService marketStreamServ;
-    private final MarketDataService marketServ;
     private MarketDataSubscriptionService stream;
     private final InvestApi api;
 
-    private int connectionAttempts;
-
-    { connectionAttempts = 0; }
     public CandleStream(InvestApi api, CompanyCollection companies){
         this.api = api;
         this.marketStreamServ = api.getMarketDataStreamService();
-        this.marketServ = api.getMarketDataService();
         this.companies = companies;
     }
 
+    /**
+     * Creates stream
+     * @param processor
+     * @throws OutNumberOfReconnectAttemptsException
+     * @throws CompanyNotFoundException
+     */
     public void initialize(DataStreamProcessor processor) throws OutNumberOfReconnectAttemptsException, CompanyNotFoundException {
 
         Consumer<Throwable> streamError = e -> {
@@ -45,13 +48,17 @@ public class CandleStream implements CandleSource{
         if (!companies.getFigisOfTradingCompanies().isEmpty()) stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
     }
 
-
+    /**
+     * Updates subscription
+     * Call every time you change some company isTrades flag, or delete company!
+     */
     public void updateSubscription() {
         if(!companies.getFigisOfTradingCompanies().isEmpty()) {
             System.out.println(companies.getFigisOfTradingCompanies().get(0));
             stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
         }
     }
+
 
     @Override
     public Queue<HistoricCandle> uploadCandles(String figi, CandleInterval candleInterval, int candleStepsBack) {
@@ -61,6 +68,11 @@ public class CandleStream implements CandleSource{
                 candleInterval));
     }
 
+    /**
+     * Calculate how many seconds in every candle Interval
+     * @param candleInterval
+     * @return
+     */
     private int secondsInCandleInterval(CandleInterval candleInterval){
         switch(candleInterval){
             case CANDLE_INTERVAL_DAY:
