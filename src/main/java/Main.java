@@ -2,14 +2,19 @@ import Commands.*;
 import Connection.Connector;
 import Data.CompanyBuilder;
 import Data.CompanyCollection;
+import Exceptions.AccountNotFoundException;
 import Exceptions.CommandException;
 import Proccesor.DataStreamProcessor;
 import Proccesor.TradeStreamProcessor;
 import Proccesor.Trader;
 import UI.Console.Console;
+import ru.tinkoff.piapi.contract.v1.Account;
+import ru.tinkoff.piapi.contract.v1.AccountType;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.exception.ApiRuntimeException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -21,9 +26,10 @@ public class Main {
         try (Scanner userScanner = new Scanner(System.in)) {
 
             InvestApi api = initializeApi(userScanner);
+            String accountId = chooseAccount(api, userScanner);
 
             CompanyCollection companyCollection = new CompanyCollection();
-            Connector connector = new Connector(api, companyCollection);
+            Connector connector = new Connector(api, companyCollection, accountId);
             Trader trader = new Trader(connector, api);
             DataStreamProcessor dataProc = new DataStreamProcessor(companyCollection, trader);
             TradeStreamProcessor tradeProc = new TradeStreamProcessor(companyCollection);
@@ -66,7 +72,6 @@ public class Main {
                 if (token.isEmpty()) throw new IllegalArgumentException();
 
                 api = InvestApi.create(token, appName);
-                api.getUserService().getAccountsSync();
                 break;
             } catch (IllegalArgumentException exception) {
                 Console.printError("Invalid token!");
@@ -76,5 +81,43 @@ public class Main {
         }
 
         return api;
+    }
+
+    private static String chooseAccount(InvestApi api, Scanner userScanner) {
+        List<Account> accounts = api.getUserService().getAccountsSync();
+        List<Account> tinkoffAccounts = new ArrayList<>();
+        String accountId = "";
+        int userInput;
+        int number = 1;
+        try {
+            for (Account account: accounts) {
+                if (account.getType() == AccountType.ACCOUNT_TYPE_TINKOFF) {
+                    tinkoffAccounts.add(account);
+                    Console.println("Account #" + number++
+                            + "\nName: " + account.getName()
+                            + "\nId: " + account.getId());
+                }
+            }
+            if (tinkoffAccounts.isEmpty()) throw new AccountNotFoundException("Accounts not found");
+
+            while (true) {
+                try {
+                    Console.println("Account choosing (type number from 1)");
+                    Console.print("> ");
+                    userInput = Integer.parseInt(userScanner.nextLine());
+                    if (userInput < 1 || userInput > tinkoffAccounts.size()) throw new IllegalArgumentException("Invalid number of account, try again");
+                    accountId = tinkoffAccounts.get(userInput - 1).getId();
+                    if (accountId == "") throw new AccountNotFoundException("Accounts not found");
+                    break;
+                } catch (IllegalArgumentException exception) {
+                    Console.printError(exception.getMessage());
+                }
+
+            }
+        } catch (AccountNotFoundException exception) {
+            Console.printError(exception.getMessage());
+        }
+        Console.println("Success");
+        return accountId;
     }
 }

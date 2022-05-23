@@ -1,14 +1,11 @@
 package Connection;
 
 import Data.CompanyCollection;
-import Exceptions.AccountNotFoundException;
 import Exceptions.CompanyNotFoundException;
 import Exceptions.OutNumberOfReconnectAttemptsException;
 import Proccesor.DataStreamProcessor;
 import Proccesor.TradeStreamProcessor;
 import com.google.protobuf.Timestamp;
-import ru.tinkoff.piapi.contract.v1.Account;
-import ru.tinkoff.piapi.contract.v1.AccountType;
 import ru.tinkoff.piapi.contract.v1.Share;
 import ru.tinkoff.piapi.contract.v1.TradingDay;
 import ru.tinkoff.piapi.core.InvestApi;
@@ -19,7 +16,6 @@ import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Class for unary requests (initialisations, verifications etc)
@@ -30,16 +26,22 @@ public class Connector{
     private final CandleStream candleStream;
     private final InvestApi api;
     private final CompanyCollection companies;
+    private final String accountId;
 
     public CompanyCollection getCompanies() {
         return companies;
     }
 
-    public Connector(InvestApi api, CompanyCollection companies) {
-        this.tradeStream = new TradeStream(api, companies);
+    public Connector(InvestApi api, CompanyCollection companies, String accountId) {
+        this.tradeStream = new TradeStream(api, accountId);
         this.candleStream = new CandleStream(api, companies);
         this.api = api;
         this.companies = companies;
+        this.accountId = accountId;
+    }
+
+    public String getAccountId() {
+        return this.accountId;
     }
 
     public TradeStream getTradeStream() {
@@ -106,7 +108,6 @@ public class Connector{
             } else {
                 System.out.printf("Schedule of working for MOEX. Date: {%s}. Day off\n", date);
             }
-
         }
     }
 
@@ -114,22 +115,8 @@ public class Connector{
         return api.getOperationsService().getPortfolioSync(accountId);
     }
 
-    public String findAccount() {
-        List<Account> accounts = api.getUserService().getAccountsSync();
-        String id = null;
-        for (Account account: accounts) {
-            if (account.getType() == AccountType.ACCOUNT_TYPE_TINKOFF) id = account.getId();
-        }
-        try {
-            if (id == null) throw new AccountNotFoundException();
-        } catch (AccountNotFoundException e) {
-            System.out.println("Account cannot found");
-        }
-        return id;
-    }
-
     public BigDecimal getAmountOfMoney() {
-        return getPortfolio(findAccount()).getTotalAmountCurrencies().getValue();
+        return getPortfolio(getAccountId()).getTotalAmountCurrencies().getValue();
     }
 
     public boolean isExistByFigi(String figi) {

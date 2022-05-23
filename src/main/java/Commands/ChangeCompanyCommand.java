@@ -33,12 +33,15 @@ public class ChangeCompanyCommand extends AbstractCommand{
             if (argument.isEmpty()) throw new IllegalCommandArgsException("The command was entered in the wrong format!");
             if (connector.isAvailableNow(companyBuilder.askNameOfExchange())) throw new ExchangeUnavailableException("Exchange unavailable now, check the schedule");
             if (connector.isExistByFigi(argument)) throw new CompanyNotFoundException("No shares with this figi were found");
+
             companyCollection.removeByFigi(argument);
+
             double moneyToTrade = companyBuilder.askMoneyToTrade();
             if (BigDecimal.valueOf(moneyToTrade).compareTo(connector.getAmountOfMoney()) > 0) throw new IllegalCommandArgsException("Wrong value of money");
             double lossPercent = companyBuilder.askLossPercent();
             double takeProfit = companyBuilder.askTakeProfit();
             int lot = connector.getLotByFigi(argument);
+
             Company newCompany = new Company(argument, moneyToTrade, lossPercent, takeProfit, lot);
             companyCollection.putCompanyByFigi(argument, newCompany);
 

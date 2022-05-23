@@ -1,6 +1,5 @@
 package Connection;
 
-import Data.CompanyCollection;
 import Data.Deal;
 import Proccesor.TradeStreamProcessor;
 import ru.tinkoff.piapi.contract.v1.OrderDirection;
@@ -15,25 +14,22 @@ import java.util.function.Consumer;
 
 
 public class TradeStream {
-    private final InvestApi api;
-    private final CompanyCollection companies;
     private final OrdersStreamService orderStreamService;
     private final OrdersService tradeServ;
     private long orderId;
+    private String accountId;
 
-    public TradeStream(InvestApi api, CompanyCollection companies) {
-        this.api = api;
+    public TradeStream(InvestApi api, String accountId) {
         orderStreamService = api.getOrdersStreamService();
         tradeServ = api.getOrdersService();
-        this.companies = companies;
+        this.accountId = accountId;
     }
 
     public void initialize(TradeStreamProcessor processor) {
-        Consumer<Throwable> streamError = e -> System.out.println(e.toString()); //todo: logger, correct reconnection
+        Consumer<Throwable> streamError = e -> System.out.println(e.toString()); //todo: correct reconnection
         orderStreamService.subscribeTrades(processor::responseProcess
                 , streamError
-                , List.of(api.getUserService().getAccountsSync().get(0).getId()));
-        //todo: сделать нормальное получение акаауннтов
+                , List.of(accountId));
     }
 
     public void buyStock(long lots, Quotation price, String figi){
@@ -42,10 +38,10 @@ public class TradeStream {
                 lots,
                 price,
                 OrderDirection.ORDER_DIRECTION_BUY,
-                api.getUserService().getAccountsSync().get(0).getId(),
+                accountId,
                 OrderType.ORDER_TYPE_MARKET,
                 String.valueOf(orderId)
-        ); //todo: сделать нормальное получение акаауннтов
+        );
         orderId++;
     }
     public void sellStock(long lots, Quotation price, String figi, Deal deal){
@@ -54,9 +50,9 @@ public class TradeStream {
                 lots,
                 price,
                 OrderDirection.ORDER_DIRECTION_SELL,
-                api.getUserService().getAccountsSync().get(0).getId(),
+                accountId,
                 OrderType.ORDER_TYPE_MARKET,
                 String.valueOf(deal.getId())
-        ); //todo: сделать нормальное получение акаауннтов
+        );
     }
 }
