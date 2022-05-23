@@ -20,14 +20,14 @@ public class Main {
 
         try (Scanner userScanner = new Scanner(System.in)) {
 
-            String token = initializeToken(userScanner);
-            InvestApi api = InvestApi.create(token, appName);
+            InvestApi api = initializeApi(userScanner);
 
             CompanyCollection companyCollection = new CompanyCollection();
             Connector connector = new Connector(api, companyCollection);
             Trader trader = new Trader(connector, api);
             DataStreamProcessor dataProc = new DataStreamProcessor(companyCollection, trader);
             TradeStreamProcessor tradeProc = new TradeStreamProcessor(companyCollection);
+
             connector.initializeStreams(dataProc, tradeProc);
 
             CompanyBuilder companyBuilder = new CompanyBuilder(userScanner);
@@ -50,12 +50,12 @@ public class Main {
         } catch (CommandException exception) {
             Console.printError(exception.getMessage());
         } catch (ApiRuntimeException exception) {
-            Console.printError("Can't create API with this token, reboot app");
-            exception.printStackTrace();
+            Console.printError("Internal critical error, try restart");
         }
     }
 
-    private static String initializeToken(Scanner userScanner) {
+    private static InvestApi initializeApi(Scanner userScanner) {
+        InvestApi api;
         String token;
 
         while (true) {
@@ -64,12 +64,17 @@ public class Main {
                 Console.print("> ");
                 token = userScanner.nextLine().trim();
                 if (token.isEmpty()) throw new IllegalArgumentException();
+
+                api = InvestApi.create(token, appName);
+                api.getUserService().getAccountsSync();
                 break;
             } catch (IllegalArgumentException exception) {
                 Console.printError("Invalid token!");
+            } catch (ApiRuntimeException exception) {
+                Console.printError("Can't create API with this token, try again");
             }
         }
 
-        return token;
+        return api;
     }
 }

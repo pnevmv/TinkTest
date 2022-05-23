@@ -36,8 +36,9 @@ public class AddCompanyCommand extends AbstractCommand{
             double lossPercent = companyBuilder.askLossPercent();
             double takeProfit = companyBuilder.askTakeProfit();
             double moneyToTrade = companyBuilder.askMoneyToTrade();
+            int lot = connector.getLotByFigi(argument);
             if (BigDecimal.valueOf(moneyToTrade).compareTo(connector.getAmountOfMoney()) > 0) throw new IllegalCommandArgsException("Wrong value of money");
-            Company company = new Company(argument, moneyToTrade, lossPercent, takeProfit, 2);
+            Company company = new Company(argument, moneyToTrade, lossPercent, takeProfit, lot);
             companyCollection.putCompanyByFigi(argument, company);
         } catch (IllegalCommandArgsException | ExchangeUnavailableException exception) {
             Console.printError(exception.getMessage());

@@ -137,5 +137,9 @@ public class Connector{
         share = api.getInstrumentsService().getShareByFigiSync(figi);
         return !share.isInitialized();
     }
+
+    public int getLotByFigi(String figi){
+        return api.getInstrumentsService().getShareByFigiSync(figi).getLot();
+    }
 }
 
