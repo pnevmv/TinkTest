@@ -10,7 +10,7 @@ import java.util.*;
 
 /**
  * Index class. contains all information to calculate indexes - history of candles
- * with necessary time stap and depth in past. Also it containts current value of index - for reccurent-calculated indexes
+ * with necessary timestamp and depth in past. Also it contains current value of index - for recurrent-calculated indexes
  */
 public class Index {
     private final IndexType indexType;
@@ -60,7 +60,7 @@ public class Index {
      */
     public void updateHistory(Candle candle) {
         if(candleHistory.size() > 0) this.candleHistory.removeFirst();
-        HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
+        HistoricCandle c = HistoricCandle.newBuilder()
                 .setClose(candle.getClose())
                 .setHigh(candle.getHigh())
                 .setLow(candle.getLow())
@@ -108,8 +108,8 @@ public class Index {
     public void printHistory(){
         System.out.println("History of:" + indexType.name() + "index");
         for(HistoricCandle h : candleHistory){
-            System.out.println("Close price" + String.valueOf(MoneyQuotationProcessor.convertFromQuation(h.getClose())));
-            System.out.println("Start time of candle" + String.valueOf(h.getTime().getSeconds())); //todo: norm output
+            System.out.println("Close price" + MoneyQuotationProcessor.convertFromQuation(h.getClose()));
+            System.out.println("Start time of candle" + h.getTime().getSeconds());
         }
     }
 }

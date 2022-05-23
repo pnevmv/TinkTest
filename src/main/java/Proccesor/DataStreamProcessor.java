@@ -49,8 +49,8 @@ public class DataStreamProcessor {
                         //Sell if some deals reached stopLoss
                         trader.sellIfStopPrice(curCandleCompany, curCandle);
 
-                        //Calculate each index if candle is on new timestap for this index
-                        //todo: calculate index only if candle is on new timestap for this index
+                        //Calculate each index if candle is on new timestamp for this index
+                        //todo: calculate index only if candle is on new timestamp for this index
                         for (IndexType index : IndexType.values()) {
                             curCandleCompany.setIndexValue(index
                                     , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
