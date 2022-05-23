@@ -16,9 +16,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 /**
- * Class for unary requests (initialisations, verifications etc)
+ * Class for unary requests (initialisations, verifications etc.)
  */
-
 public class Connector{
     private final TradeStream tradeStream;
     private final CandleStream candleStream;
