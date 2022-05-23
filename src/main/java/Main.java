@@ -10,8 +10,6 @@ import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.exception.ApiRuntimeException;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -54,8 +52,7 @@ public class Main {
         } catch (CommandException exception) {
             Console.printError(exception.getMessage());
         } catch (ApiRuntimeException exception) {
-            Console.printError("Internal critical error, try restart");
-            exception.printStackTrace();
+            Console.printError("Internal critical error, try to reboot, please");
         }
     }
 
@@ -71,6 +68,7 @@ public class Main {
                 if (token.isEmpty()) throw new IllegalArgumentException();
 
                 api = InvestApi.create(token, appName);
+                api.getUserService().getAccountsSync();
                 break;
             } catch (IllegalArgumentException exception) {
                 Console.printError("Invalid token!");
