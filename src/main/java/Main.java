@@ -21,11 +21,6 @@ public class Main {
     static final String appName = "ChnrVn";
     //"t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ"
 
-    //TODO: exceptions and commentaries
-    //TODO: catch if exchange is not available (18:40)
-    //TODO: "success"/"fail" after command execution
-    //TODO: write readme and building of project
-
     public static void main(String[] args) {
 
         try (Scanner userScanner = new Scanner(System.in)) {
