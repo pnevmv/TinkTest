@@ -5,16 +5,13 @@ import Data.*;
 import Exceptions.AccountNotFoundException;
 import Exceptions.CommandException;
 import Proccesor.DataStreamProcessor;
-import Proccesor.MoneyQuotationProcessor;
 import Proccesor.Trader;
 import UI.Console.Console;
-import com.google.protobuf.Timestamp;
 import ru.tinkoff.piapi.contract.v1.*;
 import ru.tinkoff.piapi.core.InvestApi;
 import ru.tinkoff.piapi.core.exception.ApiRuntimeException;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +21,14 @@ public class Main {
     static final String appName = "ChnrVn";
     //"t.HEtLJq48JSgIiS9Yjy6ZOvjQbtO7NBt-M1mVSOhj0rUN32xrTtfzCzlH3ikjGGCqHs2v0zasLonfsRLWvw4NiQ"
 
+    //TODO: exceptions and commentaries
+    //TODO: catch if exchange is not available
+    //TODO: "success"/"fail" after command execution
+    //TODO: everything in english
+    //TODO: remake "TradeStream"
+    //TODO: write readme and building of project
+    //TODO: english home task
+    //TODO: wash socks
     public static void main(String[] args) {
 
         try (Scanner userScanner = new Scanner(System.in)) {
@@ -88,11 +93,13 @@ public class Main {
     }
 
     private static String chooseAccount(InvestApi api, Scanner userScanner) {
+
         List<Account> accounts = api.getUserService().getAccountsSync();
         List<Account> tinkoffAccounts = new ArrayList<>();
         String accountId = "";
         int userInput;
         int number = 1;
+
         try {
             for (Account account: accounts) {
                 if (account.getType() == AccountType.ACCOUNT_TYPE_TINKOFF) {
@@ -102,6 +109,7 @@ public class Main {
                             + "\nId: " + account.getId());
                 }
             }
+
             if (tinkoffAccounts.isEmpty()) throw new AccountNotFoundException("Accounts not found");
 
             while (true) {

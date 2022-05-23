@@ -88,10 +88,6 @@ public class Console {
         System.out.printf("%-37s%-1s%n", element1, element2);
     }
 
-    public static void printf(String format, Object element1, Object element2) {
-        System.out.printf(format, element1, element2);
-    }
-
     /**
      * Prints error: toOut.toString() to Console
      * @param toOut Error to print
