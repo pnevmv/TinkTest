@@ -1,11 +1,8 @@
 package Proccesor;
 
 import ru.tinkoff.piapi.contract.v1.Candle;
-import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Queue;
 
 /**
  * just class for testing indexes calculation. Nevermind
@@ -20,13 +17,13 @@ public class CheckClass {
     public void updateHistory(Candle newCandle){
         candleHistory.addLast(newCandle);
     }
-    public void printquue(){
+    public void printQueue(){
         for(Candle c : candleHistory){
             System.out.println(c);
         }
     }
 
-    public long getSecsOfLAstCAndle(){
+    public long getSecsOfLAstCandle(){
         return candleHistory.getLast().getTime().getSeconds();
     }
 }

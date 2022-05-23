@@ -36,7 +36,7 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
     }
 
     /**
-     * Tranclates Quotation in Big Decimal with scale 9
+     * Converts Quotation in Big Decimal with scale 9
      */
     public static BigDecimal convertFromQuation(Quotation quotation ){
         return quotation.getUnits() == 0 && quotation.getNano() == 0 ?
@@ -44,7 +44,7 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
     }
 
     /**
-     * Tranclates MoneyValue in Big Decimal with scale 9
+     * Converts MoneyValue in Big Decimal with scale 9
      */
     public static BigDecimal convertFromMoneyValue(MoneyValue value ){
         return value.getUnits() == 0 && value.getNano() == 0 ?

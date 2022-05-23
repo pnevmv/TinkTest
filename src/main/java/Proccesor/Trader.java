@@ -105,13 +105,13 @@ public class Trader {
    }
 
     /**
-     * Calculate how many lots to sell. You sell stocks, if close price reached takeprofit of deal. You sell not whole lots of deal,
+     * Calculate how many lots to sell. You sell stocks, if close price reached take-profit of deal. You sell not whole lots of deal,
      * but part proportional probability
      * @param probability - [0, 1]
      * @param candle  - candle with last information about instrument
      * @param company - company wich instrument you trade
-     * @throws NotEnoughMoneyToTradeException  - if person hasnt got enough money to buy even 1 lot
-     * @throws CompanyNotFoundException - problems with programm storage
+     * @throws NotEnoughMoneyToTradeException  - if person hasn't got enough money to buy even 1 lot
+     * @throws CompanyNotFoundException - problems with program storage
      */
     public void sellLots(double probability, Candle candle, Company company) throws CompanyNotFoundException {
         BigDecimal close = MoneyQuotationProcessor.convertFromQuation(candle.getClose());
