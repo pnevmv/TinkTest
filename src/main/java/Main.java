@@ -24,8 +24,6 @@ public class Main {
     //TODO: exceptions and commentaries
     //TODO: catch if exchange is not available (18:40)
     //TODO: "success"/"fail" after command execution
-    //TODO: everything in english
-    //TODO: remake "TradeStream"
     //TODO: write readme and building of project
 
     public static void main(String[] args) {

@@ -84,7 +84,7 @@ public class TradeStream {
      * @throws CompanyNotFoundException
      */
     public void sellStock(long lots, Quotation price, String figi, Deal deal) throws CompanyNotFoundException {
-        System.out.println("going to sell");
+        System.out.println("Going to sell");
         var orderResponse = tradeServ.postOrderSync(
                 figi,
                 lots,
@@ -92,15 +92,15 @@ public class TradeStream {
                 OrderDirection.ORDER_DIRECTION_SELL,
                 accountId,
                 OrderType.ORDER_TYPE_MARKET,
-                String.valueOf(deal.getId() + "s")
+                deal.getId() + "s"
         );
 
         if(orderResponse.getExecutionReportStatus().equals(OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_FILL) ||
                 orderResponse.getExecutionReportStatus().equals(OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_PARTIALLYFILL))
         {
             Company curComp = companies.getByFigi(figi);
-            System.out.println("Продано лотов " + orderResponse.getLotsExecuted() + " по цене " +
-                    orderResponse.getExecutedOrderPrice().toString() + " /n");
+            System.out.println("Amount of felled lots " + orderResponse.getLotsExecuted() + " by price " +
+                    orderResponse.getExecutedOrderPrice() + " \n");
 
             curComp.sellShares(
                     deal,
@@ -109,7 +109,7 @@ public class TradeStream {
                     deal.getId()
             );
             curComp.getOpenDeals().printDeals();
-            System.out.println("end Of sell");
+            System.out.println("end of selling");
         }
 
     }
