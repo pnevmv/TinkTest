@@ -14,6 +14,9 @@ import ru.tinkoff.piapi.core.OrdersService;
 import ru.tinkoff.piapi.core.stream.OrdersStreamService;
 
 
+/**
+ * class for trade orders. in current realization operates with unary calls.
+ */
 public class TradeStream {
     private final OrdersStreamService orderStreamService;
     private final OrdersService tradeServ;
@@ -35,6 +38,13 @@ public class TradeStream {
                 , List.of(accountId));
     }*/
 
+    /**
+     * makes synchronized buy order, and if order is complete call buyShare method from Company
+     * @param lots
+     * @param price
+     * @param figi
+     * @throws CompanyNotFoundException
+     */
     public void buyStock(long lots, Quotation price, String figi) throws CompanyNotFoundException {
         System.out.println("going to buy");
         orderId = Double.valueOf(Math.random()).hashCode();
@@ -65,6 +75,15 @@ public class TradeStream {
 
 
     }
+
+    /**
+     *
+     * @param lots
+     * @param price
+     * @param figi
+     * @param deal
+     * @throws CompanyNotFoundException
+     */
     public void sellStock(long lots, Quotation price, String figi, Deal deal) throws CompanyNotFoundException {
         System.out.println("going to sell");
         var orderResponse = tradeServ.postOrderSync(

@@ -10,7 +10,9 @@ import java.util.HashMap;
  * Class that contains all information about instrument you want bot to trade
  * figi - unique id of instrument
  * moneyToTrade - money you allowed bot can use to trade on instrument, must be less that whole money on your acc
- * losspercent -
+ * losspercent - how many percent instrument can lose in price before you sell it
+ * takeProfit - percent instrument should grow in price, before you sell it
+ * lot - number of instrument in 1 lot
  */
 public class Company {
     private final String figi;
@@ -58,6 +60,10 @@ public class Company {
         this.openDeals = openDeals;
     }
 
+    /**
+     * make company reade for trading. to begin trade use candleStream uodateSubscription methoa
+     * @param candleSource
+     */
     public void startTrade(CandleSource candleSource) {
         for (Index index: companyIndexes.values()) {
             index.loadHistory(figi, candleSource);//TODO:calculating initial indexes
@@ -93,6 +99,10 @@ public class Company {
         return this.companyIndexes.get(indexType);
     }
 
+    /**
+     * stop trading of company
+     * @param candleStream
+     */
     public void tradeOff(CandleStream candleStream) {
         this.isTrading = false;
         candleStream.updateSubscription();
@@ -111,7 +121,7 @@ public class Company {
     }
 
     /**
-     *
+     * change company freemoney, openDeals and shareValue after buying some lots
      * @param lotNumber
      * @param price - price of whole deal (lot * price * lotNumber)
      */
@@ -124,6 +134,13 @@ public class Company {
         this.shareNumber += lotNumber * this.lot;
     }
 
+    /**
+     * change company freemoney, openDeals and shareValue after selling some lots
+     * @param deal
+     * @param lotNumber
+     * @param price
+     * @param id
+     */
     public void sellShares (Deal deal, long lotNumber, BigDecimal price, String id) {
         getOpenDeals().deletePartly(deal, lotNumber);
 
