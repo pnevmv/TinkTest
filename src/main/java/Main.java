@@ -107,7 +107,7 @@ public class Main {
                     userInput = Integer.parseInt(userScanner.nextLine());
                     if (userInput < 1 || userInput > tinkoffAccounts.size()) throw new IllegalArgumentException("Invalid number of account, try again");
                     accountId = tinkoffAccounts.get(userInput - 1).getId();
-                    if (accountId == "") throw new AccountNotFoundException("Accounts not found");
+                    if (accountId.equals("")) throw new AccountNotFoundException("Accounts not found");
                     break;
                 } catch (IllegalArgumentException exception) {
                     Console.printError(exception.getMessage());
