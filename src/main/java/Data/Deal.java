@@ -3,6 +3,12 @@ package Data;
 import java.math.BigDecimal;
 import java.util.Date;
 
+
+/**
+ *  Deal is record of bought stock.
+ *  Use it to detect moment to sell stock(when price will be more than 110% of bought price in deal, for example
+ *  Deal store price of buying, date, price of stopLoss, number of bought lots
+ */
 public class Deal {
     private final String id;
     private final long lotNumber;

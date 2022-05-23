@@ -72,7 +72,13 @@ public final class RSICalculator implements IndexCalculator {
         return  RSICalcFromNegAndPos(positive, negative).doubleValue();
     }
 
-    //calculate rsi as RSI = 100 - 100 / (1 + RS) , RS = P/N
+
+    /**
+     * calculate rsi as RSI = 100 - 100 / (1 + RS) , RS = P/N
+     * @param pos - sum of positive changes in close price for period
+     * @param neg - sum of negative changes in close price for period
+     * @return
+     */
     private BigDecimal RSICalcFromNegAndPos(BigDecimal pos, BigDecimal neg){
         return BigDecimal.valueOf(100).subtract(
                 BigDecimal.valueOf(100).divide(
@@ -104,11 +110,8 @@ public final class RSICalculator implements IndexCalculator {
            if(closes.get(i) > closes.get(i - 1))  pos += closes.get(i) - closes.get(i - 1);
            if(closes.get(i - 1) > closes.get(i))  neg += closes.get(i - 1) - closes.get(i);
         }
-        System.out.println(pos);
-        System.out.println(neg);
         double resOfHandCalc = 100 - 100 / (1 + (pos / neg));
-        System.out.println(resOfHandCalc);
-        System.out.println(resOfCaculator);
+
     }
 
     /**

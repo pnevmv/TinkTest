@@ -19,9 +19,15 @@ public class Solver {
         return RSIOnlyVersion(company); //todo: algorithm for combining indexes. Now algorithm is only for RSI
     }
 
+
+    /**
+     * Version for calculate probability only with RSI, in your version you can add another indexes
+     * @param company
+     * @return
+     */
     private static double RSIOnlyVersion(Company company){
-        // верхн€€ и нижн€€ граница индекса rsi, выход за которые €вл€етс€ сигналом к покупке/продаже. —тандартные значени€ 30 и 70
-        // √раницы снижены дл€ демонстрации работы бота. ѕодробнее по запросу RSI в интернете
+        // Up and down limit of rsi, intersection of them are signal fo buying/selling. Standart is 70 up 30 down
+        // We change it to give bot to trade frequently, but accuracy is bad
         double high = 60;
         double low = 40;
         double rsi = company.getIndexByType(IndexType.RSI).getValue();

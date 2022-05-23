@@ -8,6 +8,10 @@ import ru.tinkoff.piapi.contract.v1.HistoricCandle;
 
 import java.util.*;
 
+/**
+ * Index class. contains all information to calculate indexes - history of candles
+ * with necessary time stap and depth in past. Also it containts current value of index - for reccurent-calculated indexes
+ */
 public class Index {
     private final IndexType indexType;
     private double value;
@@ -22,10 +26,17 @@ public class Index {
         this.candleStepsBack = candleStepsBack;
     }
 
+    /**
+     *
+     * @return current value of index
+     */
     public double getValue() {
         return value;
     }
 
+    /**
+     * @return - num of steps in the past index need as history
+     */
     public int getCandleStepsBack() {
         return candleStepsBack;
     }
@@ -34,10 +45,19 @@ public class Index {
         this.candleHistory = new ArrayDeque<>(candleHistory);
     }
 
+    /**
+     * loads history for index calculation from candleSource
+     * @param figi
+     * @param candleSource
+     */
     public void loadHistory(String figi, CandleSource candleSource) {
         this.candleHistory = new ArrayDeque<>(candleSource.uploadCandles(figi, candleInterval, candleStepsBack));
     }
 
+    /**
+     * Updates history if you get new candle. LIFO
+     * @param candle
+     */
     public void updateHistory(Candle candle) {
         if(candleHistory.size() > 0) this.candleHistory.removeFirst();
         HistoricCandle c = HistoricCandle.newBuilder() //todo: converting candle to historicalCandle
@@ -63,6 +83,10 @@ public class Index {
         return candleHistory;
     }
 
+    /**
+     *
+     * @return history as list
+     */
     public List<HistoricCandle> getHistoryAsList(){
         ArrayList<HistoricCandle> res = new ArrayList<>();
         
@@ -70,10 +94,17 @@ public class Index {
         return res;
     }
 
+    /**
+     *
+     * @return - time of start of last candle in history
+     */
     public long getTimeOfLastEl(){
         return candleHistory.getLast().getTime().getSeconds(); // time of last el
     }
 
+    /**
+     * prints history
+     */
     public void printHistory(){
         System.out.println("History of:" + indexType.name() + "index");
         for(HistoricCandle h : candleHistory){

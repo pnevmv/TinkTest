@@ -6,6 +6,12 @@ import ru.tinkoff.piapi.contract.v1.CandleInterval;
 import java.math.BigDecimal;
 import java.util.HashMap;
 
+/**
+ * Class that contains all information about instrument you want bot to trade
+ * figi - unique id of instrument
+ * moneyToTrade - money you allowed bot can use to trade on instrument, must be less that whole money on your acc
+ * losspercent -
+ */
 public class Company {
     private final String figi;
     private double moneyToTrade;
@@ -88,8 +94,8 @@ public class Company {
     }
 
     public void tradeOff(CandleStream candleStream) {
-        candleStream.updateSubscription();
         this.isTrading = false;
+        candleStream.updateSubscription();
     }
 
     public boolean getIsTrading() {

@@ -46,7 +46,7 @@ public class DataStreamProcessor {
                     //Check if candle is on new timestap for some index. Different indexes has different timeframes
                     if (checkIfNewCandleForIndex(IndexType.RSI, marketDataResponse, curCandleCompany)) {
 
-                        //экстренная продажа если достигнут стоплосс
+                        //Sell if some deals reached stopLoss
                         trader.sellIfStopPrice(curCandleCompany, curCandle);
 
                         //Calculate each index if candle is on new timestap for this index
@@ -56,9 +56,6 @@ public class DataStreamProcessor {
                                     , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
                         }
 
-                        System.out.println("Calc results:");
-                        System.out.println(curCandleCompany.getIndexByType(IndexType.RSI).getValue());
-                        System.out.println(Solver.solution(curCandleCompany));
 
                         trader.trade(curCandleCompany, curCandle,
                                 Solver.solution(curCandleCompany)); //solver calculates probability to buy/sell based on indexes
@@ -73,11 +70,6 @@ public class DataStreamProcessor {
             }
 
     }
-
-    /*
-    todo: обработать ситуацию, когда у человека меньше денег чем на один лот. Добавить в качестве поля
-      вывод в консоль(или лучше экземпляр юзер интерфейса) и коннектор, чтобы удалять и стопить подписки если с ними че то стало не так
-     */
 
     /**
      * Check if new candle older that previous on the index timestap

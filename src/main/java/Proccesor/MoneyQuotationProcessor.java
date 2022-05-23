@@ -43,6 +43,9 @@ public class MoneyQuotationProcessor implements Comparator<Quotation> {
                 BigDecimal.ZERO : BigDecimal.valueOf(quotation.getUnits()).add(BigDecimal.valueOf(quotation.getNano(), 9));
     }
 
+    /**
+     * Tranclates MoneyValue in Big Decimal with scale 9
+     */
     public static BigDecimal convertFromMoneyValue(MoneyValue value ){
         return value.getUnits() == 0 && value.getNano() == 0 ?
                 BigDecimal.ZERO : BigDecimal.valueOf(value.getUnits()).add(BigDecimal.valueOf(value.getNano(), 9));

@@ -5,6 +5,13 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
+/**
+ * Class for working with history of openDeals - staff, that bot bought, and should to sell in some cases
+ * Deal store price of buying, date, price of stopLoss, number of bought lots
+ * Opendeals stores concurrent List, in wich you can add deal, delete deal, print etc.
+ * Class-wrapper for collection of deals
+ */
 public class OpenDeals {
     private CopyOnWriteArrayList<Deal> openDeals;
 
@@ -15,14 +22,29 @@ public class OpenDeals {
     public OpenDeals(Collection<Deal> deals){
         this.openDeals = new CopyOnWriteArrayList<>(deals);
     }
+
+    /**
+     * add deal to collection
+     * @param deal
+     */
     public void addDeal(Deal deal) {
         openDeals.add(deal);
     }
 
+    /**
+     * delete deal from collection
+     * @param deal
+     */
     private void deleteDeal(Deal deal) {
         openDeals.remove(deal);
     }
 
+    /**
+     * if deal was sold partly, we replace this deal with new deal with same parameters, besides lots
+     * Lots of new deal = Lots of old deal - sold deal
+     * @param deal
+     * @param numberOfSoldLots
+     */
     public void deletePartly(Deal deal, long numberOfSoldLots) {
         if(deal.getLotNumber() - numberOfSoldLots != 0) {
             addDeal(new Deal(deal.getLotNumber() - numberOfSoldLots,
@@ -33,14 +55,25 @@ public class OpenDeals {
         deleteDeal(deal);
     }
 
+    /**
+     *
+     * @return oopenDeals in List representation
+     */
     public List<Deal> getDealsAsList() {
         return this.openDeals;
     }
 
+    /**
+     * sort opendeals by price
+     */
     public void sortByPrices() {
         this.openDeals.sort(Comparator.comparing(Deal::getPrice));
     }
 
+    /**
+     *
+     * @return - average price of all deals
+     */
     public BigDecimal getAveragePrice() {
         BigDecimal price = BigDecimal.ZERO;
         for (Deal deal: openDeals) {
@@ -56,6 +89,11 @@ public class OpenDeals {
                 + "Средняя стоимость всех акций: " + getAveragePrice();
     }
 
+    /**
+     *
+     * @param id
+     * @return - Optional, that present if openDeals contains Deal with id
+     */
     public Optional<Deal> getDealById(String id){
         for(Deal d : openDeals){
             if(id.equals(d.getId())){
@@ -65,6 +103,9 @@ public class OpenDeals {
         return Optional.empty();
     }
 
+    /**
+     * prints all Deals
+     */
     public void printDeals(){
         System.out.println("\n");
         System.out.println("Открытые сделки:");
