@@ -9,7 +9,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 /**
  * Class for working with history of openDeals - staff, that bot bought, and should to sell in some cases
  * Deal store price of buying, date, price of stopLoss, number of bought lots
- * Opendeals stores concurrent List, in wich you can add deal, delete deal, print etc.
+ * Open deals stores concurrent List, in wich you can add deal, delete deal, print etc.
  * Class-wrapper for collection of deals
  */
 public class OpenDeals {

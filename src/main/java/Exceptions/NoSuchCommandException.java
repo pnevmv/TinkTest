@@ -1,7 +1,7 @@
 package Exceptions;
 
 /**
- * Throws when inputted command isnt exist
+ * Throws when inputted command isn't exist
  */
 public class NoSuchCommandException extends CommandException {
 

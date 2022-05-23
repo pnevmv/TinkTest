@@ -1,7 +1,7 @@
 package Exceptions;
 
 /**
- * Throws when command arguments inputed in wrong format, or wrong number of args was inputted
+ * Throws when command arguments inputted in wrong format, or wrong number of args was inputted
  */
 public class IllegalCommandArgsException extends CommandException {
 
