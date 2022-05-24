@@ -49,6 +49,7 @@ public class TradeStream {
         System.out.println("going to buy");
         orderId = Double.valueOf(Math.random()).hashCode();
 
+        //todo: verification of params
         var orderResponse = tradeServ.postOrderSync(
                 figi,
                 lots,
@@ -62,7 +63,7 @@ public class TradeStream {
         if(orderResponse.getExecutionReportStatus().equals(OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_FILL) ||
                 orderResponse.getExecutionReportStatus().equals(OrderExecutionReportStatus.EXECUTION_REPORT_STATUS_PARTIALLYFILL)){
             Company curComp = companies.getByFigi(figi);
-            System.out.println("Куплено лотов " + orderResponse.getLotsExecuted() + " по цене " +
+            System.out.println("Buy lot^: " + orderResponse.getLotsExecuted() + " price: " +
                     orderResponse.getExecutedOrderPrice().toString() + " \n");
 
             curComp.buyShares(
@@ -85,6 +86,7 @@ public class TradeStream {
      */
     public void sellStock(long lots, Quotation price, String figi, Deal deal) throws CompanyNotFoundException {
         System.out.println("Going to sell");
+        //todo: verification of params
         var orderResponse = tradeServ.postOrderSync(
                 figi,
                 lots,

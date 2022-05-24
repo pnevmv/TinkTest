@@ -39,8 +39,8 @@ public class Trader {
      * @throws CompanyNotFoundException - problems with programm storage
      */
     public void trade(Company company, Candle candle, double probability) throws NotEnoughMoneyToTradeException, CompanyNotFoundException {
-        if(probability > 0) buyLots( probability, candle, company);
-        if(probability < 0) sellLots((-1) * probability, candle, company);
+        if(probability > 0) buyLots(Math.abs(probability), candle, company);
+        if(probability < 0) sellLots(Math.abs(probability), candle, company);
 
     }
 
@@ -125,8 +125,8 @@ public class Trader {
 
                // if you have only 1 lot, sell it. If, lots calculates with probability
 
-               if(d.getLotNumber() == 1) System.out.println(1); tradeStream.sellStock(1, candle.getClose(), company.getFigi(), d);
-                if (d.getLotNumber() > 1){
+               if(d.getLotNumber() == 1)  tradeStream.sellStock(1, candle.getClose(), company.getFigi(), d);
+                if ((d.getLotNumber() * probability) >= 1){
                     tradeStream.sellStock(
                             (long)(d.getLotNumber() * probability),
                             candle.getClose(),
@@ -134,7 +134,6 @@ public class Trader {
                             d
                     );
                 }
-
 
             }
         }

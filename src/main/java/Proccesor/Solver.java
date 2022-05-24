@@ -16,7 +16,7 @@ public class Solver {
      * '+' is to buy and value is probability to do this thing
      */
     public static double  solution(Company company){
-        return RSIOnlyVersion(company); //todo: algorithm for combining indexes. Now algorithm is only for RSI
+        return RSIOnlyVersion(company);
     }
 
 
@@ -28,8 +28,8 @@ public class Solver {
     private static double RSIOnlyVersion(Company company){
         // Up and down limit of rsi, intersection of them are signal fo buying/selling. Standart is 70 up 30 down
         // We change it to give bot to trade frequently, but accuracy is bad
-        double high = 60;
-        double low = 40;
+        double high = 65;
+        double low = 35;
         double rsi = company.getIndexByType(IndexType.RSI).getValue();
         if(rsi > high){
             return (rsi - high) / (100 - high); // if rsi = 100 probability 100%, if 70 probability 0%

@@ -53,7 +53,6 @@ public class CandleStream implements CandleSource{
      */
     public void updateSubscription() {
         if(!companies.getFigisOfTradingCompanies().isEmpty()) {
-            System.out.println(companies.getFigisOfTradingCompanies().get(0));
             stream.subscribeCandles(companies.getFigisOfTradingCompanies(), SubscriptionInterval.SUBSCRIPTION_INTERVAL_ONE_MINUTE);
         }
     }

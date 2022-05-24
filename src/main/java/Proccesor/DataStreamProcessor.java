@@ -56,11 +56,9 @@ public class DataStreamProcessor {
                                     , i.getCalcByIndex(index).calculateIndex(curCandleCompany, curCandle));
                         }
 
-
+                        System.out.println("Company "+ curCandleCompany.getFigi() + " RSI is: " + curCandleCompany.getIndexByType(IndexType.RSI).getValue());
                         trader.trade(curCandleCompany, curCandle,
                                 Solver.solution(curCandleCompany)); //solver calculates probability to buy/sell based on indexes
-
-
                     }
 
 
@@ -82,7 +80,7 @@ public class DataStreamProcessor {
                         .getTimeOfLastEl() != marketDataResponse.getCandle().getTime().getSeconds();
             case NVI:
             case PVI:
-                return false; //todo: проверка, что инфа за новый день пришла
+                return false;
             default:
                 return false;
         }
