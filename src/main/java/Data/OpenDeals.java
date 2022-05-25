@@ -50,7 +50,9 @@ public class OpenDeals {
             addDeal(new Deal(deal.getLotNumber() - numberOfSoldLots,
                     deal.getPrice(),
                     deal.getStopPrice(),
-                    deal.getId()));
+                    String.valueOf(Double.valueOf(Math.random()).hashCode())
+                 )
+            );
         }
         deleteDeal(deal);
     }
