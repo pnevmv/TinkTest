@@ -1,6 +1,8 @@
 import Commands.*;
 import Connection.Connector;
 import Data.*;
+import Database.DatabaseConnector;
+import Database.DatabaseManager;
 import Exceptions.AccountNotFoundException;
 import Exceptions.CommandException;
 import Proccesor.DataStreamProcessor;
@@ -19,10 +21,20 @@ public class Main {
 
     public static void main(String[] args) {
 
+        DatabaseConnector databaseConnector = new DatabaseConnector();
+        databaseConnector.connect();
+        DatabaseManager databaseManager = new DatabaseManager(databaseConnector);
+        Company c = new Company("asd", 1, 1, 1, 1);
+        databaseManager.insertCompany(c);
+
         try (Scanner userScanner = new Scanner(System.in)) {
 
             InvestApi api = initializeApi(userScanner);
             String accountId = chooseAccount(api, userScanner);
+
+            //DatabaseConnector databaseConnector = new DatabaseConnector();
+            //databaseConnector.connect();
+            //DatabaseManager databaseManager = new DatabaseManager(databaseConnector);
 
             CompanyCollection companyCollection = new CompanyCollection();
             Connector connector = new Connector(api, companyCollection, accountId);

@@ -95,7 +95,7 @@ public class Company {
     }
 
     /**
-     * change company freemoney, openDeals and shareValue after selling some lots
+     * change company free money, openDeals and shareValue after selling some lots
      * @param deal
      * @param lotNumber
      * @param price
