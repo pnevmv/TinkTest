@@ -16,9 +16,9 @@ The trading bot is implemented as an interactive console application, with the p
 
 ## Installation and Running
 
-Install Java 11 or higher.
-Open the command prompt (in Windows, run as administrator) and navigate to the directory with the JAR file.
-Enter java -jar FileName.jar.
+1. Install Java 11 or higher.
+2. Open the command prompt (in Windows, run as administrator) and navigate to the directory with the JAR file.
+3. Enter `java -jar FileName.jar`.
 
 ## Getting Started
 
