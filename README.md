@@ -5,20 +5,20 @@ This trading bot implements trading with financial instruments (currently funds 
 
 The trading bot is implemented as an interactive console application, with the potential for quick feature expansion through database integration and a graphical user interface. The application is logically divided into four parts:
 
-    User Interaction
+1. User Interaction
         Obtaining commands, handling requests, and exceptional situations.
-    Computational
+2. Computational
         Calculating coefficients (RSI, NVI, PVI; currently only RSI is implemented), making decisions on buying and selling based on these indices.
-    Connector
+3. Connector
         Creating threads and unary requests to the API for receiving and sending data, based on decisions made and calculated indices.
-    Data Storage
+4. Data Storage
         Storing the history of all transactions, companies with available stocks for trading, and indices.
 
 ## Installation and Running
 
-    Install Java 11 or higher.
-    Open the command prompt (in Windows, run as administrator) and navigate to the directory with the JAR file.
-    Enter java -jar FileName.jar.
+Install Java 11 or higher.
+Open the command prompt (in Windows, run as administrator) and navigate to the directory with the JAR file.
+Enter java -jar FileName.jar.
 
 ## Getting Started
 
