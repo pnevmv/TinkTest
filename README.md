@@ -1,6 +1,6 @@
 # Trading Bot using Tinkoff Invest API
 
-This trading bot implements trading with financial instruments (currently funds and stocks), making decisions to buy/sell based on the Relative Strength Index (<a href="https://en.wikipedia.org/wiki/Relative_strength_index">RSI</a>). It allows adding/removing instruments for trading and setting limits on the available funds for trading with a particular instrument. Bot management is done through command-line input. Details about available commands are provided below.
+This trading bot implements trading with financial instruments (currently funds and stocks), making decisions to buy/sell based on the Relative Strength Index (<a href="https://en.wikipedia.org/wiki/Relative_strength_index">RSI</a>). It allows adding/removing instruments for trading and setting limits on the available funds for trading with a particular instrument. The bot is controlled via command line input. Details of the available commands are provided below.
 ## Project Structure
 
 The trading bot is implemented as an interactive console application, with the potential for quick feature expansion through database integration and a graphical user interface. The application is logically divided into four parts:
