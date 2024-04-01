@@ -24,12 +24,12 @@ The trading bot is implemented as an interactive console application, with the p
 
 Upon starting the bot, you'll be prompted to enter a token. You can generate a token on the Tinkoff Investments website under the token section. Then, select the account number for trading. After that, the interactive mode starts with the ability to input commands. Begin by entering the help command to familiarize yourself with all the bot's capabilities.
 ## Available Commands
-<ul>
-<li>'help': List all commands.
-<li>'add': Add an instrument. Enter the FIGI of the instrument, the money provided to the bot for trading with the instrument, the maximum drawdown percentage, after which a sale occurs, and the profit percentage, after which the bot starts selling the instrument.
-<li>'changeCompany': Change parameters for trading (stop loss, take-profit, free money, etc.).
-<li>'startTrade': Start trading with the instrument. The add command only adds the instrument to the program; use this command for trading.
-<li>'stopTrade': Stop trading with the instrument.
-<li>'delete': Delete the instrument from the program.
-<li>'printSchedule': Print the stock exchange schedule.
-<li>'exit': Exit the program. All trading stops. At this stage, the program won't remember trades from the previous session upon the next launch.
+
++ `help`: List all commands.
++ `add`: Add an instrument. Enter the FIGI of the instrument, the money provided to the bot for trading with the instrument, the maximum drawdown percentage, after which a sale occurs, and the profit percentage, after which the bot starts selling the instrument.
++ `changeCompany`: Change parameters for trading (stop loss, take-profit, free money, etc.).
++ `startTrade`: Start trading with the instrument. The add command only adds the instrument to the program; use this command for trading.
++ `stopTrade`: Stop trading with the instrument.
++ `delete`: Delete the instrument from the program.
++ `printSchedule`: Print the stock exchange schedule.
++ `exit`: Exit the program. All trading stops. At this stage, the program won't remember trades from the previous session upon the next launch.
