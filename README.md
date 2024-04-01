@@ -25,7 +25,7 @@ Enter java -jar FileName.jar.
 Upon starting the bot, you'll be prompted to enter a token. You can generate a token on the Tinkoff Investments website under the token section. Then, select the account number for trading. After that, the interactive mode starts with the ability to input commands. Begin by entering the help command to familiarize yourself with all the bot's capabilities.
 ## Available Commands
 <ul>
-<li>_help_: List all commands.
+<li> _help_ : List all commands.
 <li>add: Add an instrument. Enter the FIGI of the instrument, the money provided to the bot for trading with the instrument, the maximum drawdown percentage, after which a sale occurs, and the profit percentage, after which the bot starts selling the instrument.
 <li>changeCompany: Change parameters for trading (stop loss, take-profit, free money, etc.).
 <li>startTrade: Start trading with the instrument. The add command only adds the instrument to the program; use this command for trading.
